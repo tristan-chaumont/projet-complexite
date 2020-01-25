@@ -1,5 +1,7 @@
 package tableau;
 
+import java.util.ArrayList;
+
 public class Main {
 	
 	public static void main(String[] args) {
@@ -37,6 +39,13 @@ public class Main {
 		cases[4][4] = new Case(Case.Type.ANGLE_BAS_DROITE);
 		
 		Plateau plateau = new Plateau(cases);
-		System.out.println(plateau);
+		
+		long debut = System.currentTimeMillis();
+		ArrayList<Integer> chemins = plateau.getChemins();
+		long fin = System.currentTimeMillis();
+		
+		System.out.println("Les différentes longueurs des chemins sont : " +chemins);
+		System.out.println("Le meilleur chemin a pour longueur : " +plateau.getMeilleur(chemins));
+		System.out.println("Le programme a mis " +((fin - debut)) +"ms pour éxécuter cette tâche");
 	}
 }

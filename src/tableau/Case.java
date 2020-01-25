@@ -12,11 +12,14 @@ public class Case {
         ANGLE_BAS_DROITE,
         ANGLE_BAS_GAUCHE
     };
+    
+    boolean compte;
 
     private Type type;
 
     public Case(Type t) {
         type = t;
+        compte = false;
     }
     
     public String toString() {
@@ -52,5 +55,13 @@ public class Case {
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+	
+	public void setCaseCompte() {
+		this.compte = true;
+	}
+	
+	public boolean estCompte() {
+		return this.compte;
 	}
 }
