@@ -26,11 +26,11 @@ public class Plateau {
     				cases[i][j].setCaseCompte();
     				
     				while(continu) {
-    					if((j < 4) && (cases[i][j+1].getType() != Case.Type.BLANC) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
+    					if((j < cases.length-1) && (cases[i][j+1].getType() != Case.Type.BLANC) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
     						cases[i][j+1].setCaseCompte();
     						j++;
     						last = "Droite";
-    					}else if((i < 4) && (cases[i+1][j].getType() != Case.Type.BLANC) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
+    					}else if((i < cases.length-1) && (cases[i+1][j].getType() != Case.Type.BLANC) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
     						cases[i+1][j].setCaseCompte();
     						i++;
     						last = "Bas";
