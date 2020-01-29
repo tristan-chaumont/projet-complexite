@@ -3,13 +3,84 @@ package tableau;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Classe Plateau
+ * Represente le plateau
+ */
 public class Plateau {
+	
+	/**
+	 * Attributs :
+	 * cases
+	 * 		tableau multidimentionnels de cases permettant de représenter le plateau
+	 * taille
+	 * 		taille du tableau
+	 */
 
     private Case[][] cases;
+    private int taille;
+    
+    /**
+     * Constructeur
+     * @param size
+     * 			taille du plateau
+     */
 
-    public Plateau(Case[][] c) {
-        cases = c;
+    public Plateau(int size) {
+    	taille = size;
+    	cases = new Case[taille][taille];
     }
+    
+    /**
+     * Methode genererPlateau
+     * Permet de generer un plateau aleatoirement
+     */
+
+	public void genererPlateau() {
+    	for(int i = 0; i < taille; i++) {
+    		for(int j = 0; j < taille; j++) {
+    			int random = (int)(Math.random() * 8);
+    			Case.Type type = null;
+    			switch(random) {
+	    			case 0:
+	    				type = Case.Type.CROIX;
+	    				break;
+	    			case 1:
+	    				type = Case.Type.BLANC;
+	    				break;
+	    			case 2:
+	    				type = Case.Type.VERTICAL;
+	    				break;
+	    			case 3:
+	    				type = Case.Type.HORIZONTAL;
+	    				break;
+	    			case 4:
+	    				type = Case.Type.ANGLE_HAUT_GAUCHE;
+	    				break;
+	    			case 5:
+	    				type = Case.Type.ANGLE_HAUT_DROITE;
+	    				break;
+	    			case 6:
+	    				type = Case.Type.ANGLE_BAS_DROITE;
+	    				break;
+	    			case 7:
+	    				type = Case.Type.ANGLE_BAS_GAUCHE;
+	    				break;
+    				default:
+    					break;
+    			}
+    			
+    			cases[i][j] = new Case(type);
+        	}
+    	}
+    }
+	
+	/**
+	 * Methode getChemins
+	 * Permet d'obtenir la taille de tous les chemins possibles
+	 * @return
+	 * 			la liste de la taille des chemins
+	 */
     
     public ArrayList<Integer> getChemins() {
     	Case start;
@@ -26,22 +97,25 @@ public class Plateau {
     				cases[i][j].setCaseCompte();
     				
     				while(continu) {
-    					if((j < cases.length-1) && (cases[i][j+1].getType() != Case.Type.BLANC) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
+    					//System.out.println("(" +i +";" +j +")");
+    					if((j < cases.length-1) && (cases[i][j].caseCorrect(cases[i][j+1], last)) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
     						cases[i][j+1].setCaseCompte();
     						j++;
     						last = "Droite";
-    					}else if((i < cases.length-1) && (cases[i+1][j].getType() != Case.Type.BLANC) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
+    					}else if((i < cases.length-1) && (cases[i][j].caseCorrect(cases[i+1][j], last)) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
     						cases[i+1][j].setCaseCompte();
     						i++;
     						last = "Bas";
-    					}else if((j > 0) && (cases[i][j-1].getType() != Case.Type.BLANC) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
+    					}else if((j > 0) && (cases[i][j].caseCorrect(cases[i][j-1], last)) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
     						cases[i][j-1].setCaseCompte();
 							j--;
 							last = "Gauche";
-    					}else if((i > 0) && (cases[i-1][j].getType() != Case.Type.BLANC) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
+    					}else if((i > 0) && (cases[i][j].caseCorrect(cases[i-1][j], last)) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
     						cases[i-1][j].setCaseCompte();
     						i--;
     						last = "Haut";
+    					}else {
+    						continu = false;
     					}
     					
     					countChemin++;
@@ -58,9 +132,22 @@ public class Plateau {
     	return listChemins;
     }
     
+    /**
+     * Methode getMeilleur
+     * @param liste
+     * 			liste des circuits
+     * @return
+     * 			la taille du meilleur circuit
+     */
+    
     public int getMeilleur(ArrayList<Integer> liste) {
     	return Collections.max(liste);
     }
+    
+    /**
+     * Methode toString
+     * ! Methode a supprimer !
+     */
     
     public String toString() {
     	String res = "";
@@ -73,4 +160,16 @@ public class Plateau {
     	
     	return res;
     }
+    
+    /*************************/
+   /****GETTERS & SETTERS****/
+  /*************************/
+    
+    public Case[][] getCases() {
+		return cases;
+	}
+
+	public void setCases(Case[][] cases) {
+		this.cases = cases;
+	}
 }
