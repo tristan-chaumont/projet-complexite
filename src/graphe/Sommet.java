@@ -52,6 +52,10 @@ public class Sommet {
         return y;
     }
 
+    public ArrayList<Sommet> getAdjacents() {
+        return adjacents;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

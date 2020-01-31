@@ -22,8 +22,53 @@ public class Graphe {
         sommets = new ArrayList<>();
     }
 
-    private boolean contientCycle(int[][] graphe) {
-        return true;
+    /**
+     * Méthode helper qui détecte s'il existe un sous-graphe qui peut être atteint depuis le Sommet "sommet".
+     * @param sommet
+     *      Sommet du quel on part pour détecter un cycle.
+     * @param visited
+     *      Tableau des sommets déjà visités.
+     * @param parent
+     *      Parent du sommet courant.
+     * @return
+     */
+    private boolean contientCycleUtil(Sommet sommet, boolean[] visited, Sommet parent) {
+        // Marque le sommet courant comme visité
+        visited[sommets.indexOf(sommet)] = true;
+
+        // Pour tous les sommets adjacents au sommet courant
+        for (Sommet s : sommet.getAdjacents()) {
+            // Si le noeud adjacent n'a pas été visité, alors on réexécute la méthode sur ce nouveau sommet
+            if (!visited[sommets.indexOf(s)]) {
+                if (contientCycleUtil(s, visited, sommet))
+                    return true;
+
+            // Si le sommet adjacent a été visité et que ce n'est pas un parent du sommet actuel, alors il y a un cycle.
+            } else if (!s.equals(parent))
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Détecte s'il y a un cycle.
+     * @return
+     *      true s'il y a un cycle, false sinon.
+     */
+    private boolean contientCycle() {
+        // Tableau des sommets visités. Initialement tous à false.
+        boolean[] visited = new boolean[sommets.size()];
+
+        // Utilise l'algo DFS (Depth First Search) pour détecter les cycles.
+        for(int i = 0; i < visited.length; i++) {
+            // On n'exécute pas la méthode helper si le chemin a déjà été visité.
+            if (!visited[i])
+                if (contientCycleUtil(sommets.get(i), visited, null))
+                    return true;
+        }
+
+        return false;
     }
 
     /**
@@ -93,5 +138,10 @@ public class Graphe {
         }
 
         System.out.println(builder.toString());
+
+        if(graphe.contientCycle())
+            System.out.println("Le graphe contient au moins un cycle.");
+        else
+            System.out.println("Le graphe ne contient pas de cycle.");
     }
 }
