@@ -8,8 +8,11 @@ import main.Global.Type;
  */
 
 public class Case {
-    
-    boolean compte;
+
+	/**
+	 * Booléen permettant de savoir si la case a été comptée
+	 */
+	boolean compte;
 
     private Type type;
 

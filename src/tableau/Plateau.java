@@ -1,5 +1,7 @@
 package tableau;
 
+import main.Global.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -40,31 +42,31 @@ public class Plateau {
     	for(int i = 0; i < taille; i++) {
     		for(int j = 0; j < taille; j++) {
     			int random = (int)(Math.random() * 8);
-    			Case.Type type = null;
+    			Type type = null;
     			switch(random) {
 	    			case 0:
-	    				type = Case.Type.CROIX;
+	    				type = Type.CROIX;
 	    				break;
 	    			case 1:
-	    				type = Case.Type.BLANC;
+	    				type = Type.BLANC;
 	    				break;
 	    			case 2:
-	    				type = Case.Type.VERTICAL;
+	    				type = Type.VERTICAL;
 	    				break;
 	    			case 3:
-	    				type = Case.Type.HORIZONTAL;
+	    				type = Type.HORIZONTAL;
 	    				break;
 	    			case 4:
-	    				type = Case.Type.ANGLE_HAUT_GAUCHE;
+	    				type = Type.ANGLE_HAUT_GAUCHE;
 	    				break;
 	    			case 5:
-	    				type = Case.Type.ANGLE_HAUT_DROITE;
+	    				type = Type.ANGLE_HAUT_DROITE;
 	    				break;
 	    			case 6:
-	    				type = Case.Type.ANGLE_BAS_DROITE;
+	    				type = Type.ANGLE_BAS_DROITE;
 	    				break;
 	    			case 7:
-	    				type = Case.Type.ANGLE_BAS_GAUCHE;
+	    				type = Type.ANGLE_BAS_GAUCHE;
 	    				break;
     				default:
     					break;
@@ -91,7 +93,7 @@ public class Plateau {
     	
     	for(int i = 0; i < cases.length; i++) {
     		for(int j = 0; j < cases.length; j++) {
-    			if((!continu) && (cases[i][j].getType() != Case.Type.BLANC) && (cases[i][j].estCompte() == false)) {
+    			if((!continu) && (cases[i][j].getType() != Type.BLANC) && (cases[i][j].estCompte() == false)) {
     				continu = true;
     				start = cases[i][j];
     				cases[i][j].setCaseCompte();

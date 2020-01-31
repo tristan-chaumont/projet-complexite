@@ -8,11 +8,7 @@ package main;
 public class Global {
 
     /**
-     * Attributs :
-     * type
-     * 		type de la case
-     * compte
-     * 		booleen permettant de savoir si la case a ete comptee
+     * Type de la case du jeu Connect
      */
 
     public enum Type {

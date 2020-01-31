@@ -1,5 +1,7 @@
 package graphe;
 
+import main.Global.*;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -19,18 +21,35 @@ public class Sommet {
      */
     private ArrayList<Sommet> adjacents;
 
-    public Sommet(int abscisse, int ordonnee) {
+    /**
+     * Type du sommet (parmi les types du jeu Connect)
+     */
+    private Type type;
+
+    public Sommet(int abscisse, int ordonnee, Type type) {
         x = abscisse;
         y = ordonnee;
+        this.type = type;
+        adjacents = new ArrayList<>();
     }
 
-    public Sommet() {
+    public Sommet(Type type) {
         x = 0;
         y = 0;
+        this.type = type;
+        adjacents = new ArrayList<>();
     }
 
     public void addAdjacent(Sommet adjacent) {
         adjacents.add(adjacent);
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     @Override
