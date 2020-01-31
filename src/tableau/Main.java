@@ -3,7 +3,7 @@ package tableau;
 import java.util.ArrayList;
 
 /**
- * Classe Main
+ * Classe main.Main
  */
 public class Main {
 	

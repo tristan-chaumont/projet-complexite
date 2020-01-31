@@ -1,30 +1,13 @@
 package tableau;
 
+import main.Global.Type;
+
 /**
  * Classe Case
  * Represente une case du plateau
  */
 
 public class Case {
-
-	/**
-	 * Attributs :
-	 * type
-	 * 		type de la case
-	 * compte
-	 * 		booleen permettant de savoir si la case a ete comptee
-	 */
-	
-    public enum Type {
-        CROIX,
-        BLANC,
-        VERTICAL,
-        HORIZONTAL,
-        ANGLE_HAUT_GAUCHE,
-        ANGLE_HAUT_DROITE,
-        ANGLE_BAS_DROITE,
-        ANGLE_BAS_GAUCHE
-    };
     
     boolean compte;
 
@@ -48,7 +31,7 @@ public class Case {
     
     public boolean caseCorrect(Case suivante, String last) {
     	boolean res = false;
-    	if(suivante.getType() != Case.Type.BLANC) {
+    	if(suivante.getType() != Type.BLANC) {
 	    	if(this.type == Type.CROIX) {
 	    		if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 	    			res = true;

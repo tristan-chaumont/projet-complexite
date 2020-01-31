@@ -37,12 +37,12 @@ public class Graphe {
         return true;
     }
 
-    public void ajouterArc(Sommet from, Sommet to) {
-
+    public void addArc(Sommet from, Sommet to) {
+        from.addAdjacent(to);
+        to.addAdjacent(from);
     }
 
     public static void main(String[] args) {
-        Graphe g = new Graphe(5, 5);
-        System.out.println(g.toString());
+
     }
 }
