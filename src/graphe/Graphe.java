@@ -4,6 +4,10 @@ import main.Global.*;
 
 import java.util.ArrayList;
 
+/**
+ * Classe représentant un Graphe avec ses sommets ainsi que les méthodes afin de trouver un cycle.
+ * @author Tristan
+ */
 public class Graphe {
 
     /**
