@@ -74,6 +74,11 @@ public class Graphe {
         return false;
     }
 
+    /**
+     * Vérifie si le sommet courant peut être relié aux sommets qui lui sont adjacents. Si oui, il se relie à eux.
+     * @param sommet
+     *      Sommet qui doit être relié.
+     */
     public void relierSommetsAdjacents(Sommet sommet) {
         int x = sommet.getX();
         int y = sommet.getY();

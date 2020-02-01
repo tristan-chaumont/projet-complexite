@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * Classe représentant un sommet ainsi que ses successeurs et prédecesseurs
+ * Classe représentant un sommet.
  * @author Tristan
  */
 public class Sommet {
@@ -31,6 +31,15 @@ public class Sommet {
      */
     private boolean[] branches = new boolean[4];
 
+    /**
+     * Constructeur du sommet. Crée une nouvelle ArrayList de sommets adjacents vide. Attribue les valeurs au tableau branches en fonction du type du sommet.
+     * @param abscisse
+     *      Abscisse du sommet sur le plateau.
+     * @param ordonnee
+     *      Ordonnée du sommet sur le plateau.
+     * @param type
+     *      Type du sommet.
+     */
     public Sommet(int abscisse, int ordonnee, Type type) {
         x = abscisse;
         y = ordonnee;

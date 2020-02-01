@@ -4,7 +4,7 @@ import graphe.Graphe;
 import graphe.Sommet;
 
 /**
- * Classe globale qui regroupe toutes les informations qui sont identiques pour la méthode du graphe et la méthode du tableau
+ * Classe globale qui regroupe toutes les informations qui sont partagées par la méthode du graphe et la méthode du tableau
  * @author Tristan
  */
 
@@ -22,8 +22,13 @@ public class Global {
         ANGLE_HAUT_DROITE,
         ANGLE_BAS_GAUCHE,
         ANGLE_BAS_DROITE
-    };
+    }
 
+    /**
+     * Génère un type aléatoire pour un sommet pour la génération de graphe aléatoire.
+     * @return
+     *      Un type pour le sommet aléatoire.
+     */
     public static Type genererTypeAleatoire() {
         switch ((int) (Math.random() * 7)) {
             case 0:
@@ -46,6 +51,11 @@ public class Global {
         return null;
     }
 
+    /**
+     * Génère un graphe fait à la main.
+     * @return
+     *      Le graphe en question.
+     */
     public static Graphe genererGraphePrefait() {
         Graphe graphe = new Graphe(5, 5);
         /*
@@ -91,6 +101,11 @@ public class Global {
         return graphe;
     }
 
+    /**
+     * Génère un graphe aléatoire contenant au moins un cycle.
+     * @return
+     *      Le graphe aléatoire généré.
+     */
     public static Graphe genererGrapheAleatoire() {
         Graphe g;
         do {
