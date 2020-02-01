@@ -52,6 +52,10 @@ public class Sommet {
         return y;
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public ArrayList<Sommet> getAdjacents() {
         return adjacents;
     }

@@ -1,7 +1,5 @@
 package graphe;
 
-import main.Global.*;
-
 import java.util.ArrayList;
 
 /**
@@ -18,7 +16,7 @@ public class Graphe {
     /**
      * Liste des sommets du graphe
      */
-    private ArrayList<Sommet> sommets;
+    public ArrayList<Sommet> sommets;
 
     public Graphe(int h, int l) {
         hauteur = h;
@@ -88,64 +86,19 @@ public class Graphe {
         to.addAdjacent(from);
     }
 
-    public static void main(String[] args) {
-        Graphe graphe = new Graphe(5, 5);
-        /*
-        Graphe :
-            _ _
-           |   |
-           |   |
-           |_ _|_ _
-               |   |
-               |_ _|_
-                   |
-                   |
-         */
-        graphe.sommets.add(new Sommet(1, 0, Type.ANGLE_BAS_DROITE));
-        graphe.sommets.add(new Sommet(2, 0, Type.ANGLE_BAS_GAUCHE));
-        graphe.addArc(graphe.sommets.get(0), graphe.sommets.get(1));
+    public void addSommet(Sommet sommet) {
+        sommets.add(sommet);
+    }
 
-        graphe.sommets.add(new Sommet(1, 1, Type.VERTICAL));
-        graphe.addArc(graphe.sommets.get(0), graphe.sommets.get(2));
+    public Sommet getSommetDepuisCoordonnees(int x, int y) {
+        return sommets.stream().filter(s -> s.getX() == x && s.getY() == y).findFirst().orElse(null);
+    }
 
-        graphe.sommets.add(new Sommet(2, 1, Type.VERTICAL));
-        graphe.addArc(graphe.sommets.get(1), graphe.sommets.get(3));
+    public int getHauteur() {
+        return hauteur;
+    }
 
-        graphe.sommets.add(new Sommet(1, 2, Type.ANGLE_HAUT_DROITE));
-        graphe.addArc(graphe.sommets.get(2), graphe.sommets.get(4));
-
-        graphe.sommets.add(new Sommet(2, 2, Type.CROIX));
-        graphe.addArc(graphe.sommets.get(3), graphe.sommets.get(5));
-
-        graphe.sommets.add(new Sommet(2, 3, Type.ANGLE_HAUT_DROITE));
-        graphe.addArc(graphe.sommets.get(5), graphe.sommets.get(6));
-
-        graphe.sommets.add(new Sommet(3, 2, Type.ANGLE_BAS_GAUCHE));
-        graphe.addArc(graphe.sommets.get(5), graphe.sommets.get(7));
-
-        graphe.sommets.add(new Sommet(3, 3, Type.CROIX));
-        graphe.addArc(graphe.sommets.get(7), graphe.sommets.get(8));
-        graphe.addArc(graphe.sommets.get(6), graphe.sommets.get(8));
-
-        graphe.sommets.add(new Sommet(3, 4, Type.VERTICAL));
-        graphe.addArc(graphe.sommets.get(8), graphe.sommets.get(9));
-
-        StringBuilder builder = new StringBuilder();
-
-        for(int i = 0; i < graphe.largeur; i++) {
-            for(int j = 0; j < graphe.hauteur; j++) {
-                final int finalI = i, finalJ = j;
-                Sommet sommet = graphe.sommets.stream().filter(s -> s.getX() == finalJ && s.getY() == finalI).findFirst().orElse(null);
-                builder.append(sommet == null ? "  " : "S ");
-            }
-            builder.append("\n");
-        }
-
-        System.out.println(builder.toString());
-
-        if(graphe.contientCycle())
-            System.out.println("Le graphe contient au moins un cycle.");
-        else
-            System.out.println("Le graphe ne contient pas de cycle.");
+    public int getLargeur() {
+        return largeur;
     }
 }
