@@ -32,26 +32,23 @@ public class Vue extends JFrame {
             for (int j = 0; j < graphe.getLargeur(); j++) {
                 Sommet sommet = graphe.getSommetDepuisCoordonnees(j, i);
                 try {
+                    // On dessine les images
                     g.drawImage(getUrl(sommet),
                             j * (getWidth() / graphe.getLargeur()),
                             i * (getHeight() / graphe.getHauteur()),
                             getWidth() / graphe.getLargeur(),
                             getHeight() / graphe.getHauteur(),
                             null);
+
+                    // On dessine les séparations
+                    g.drawRect(j * (getWidth() / graphe.getLargeur()),
+                            i * (getHeight() / graphe.getHauteur()),
+                            getWidth() / graphe.getLargeur(),
+                            getHeight() / graphe.getHauteur());
                 } catch (IOException e) {
                     System.out.println("Image introuvable : mauvais chemin ?");
                 }
             }
-        }
-
-        // On dessine les séparations
-        for (int i = 0; i < graphe.getLargeur(); i++) {
-            int x = i * (getWidth() / graphe.getLargeur());
-            g.drawLine(x, 0, x, getHeight());
-        }
-        for (int i = 0; i < graphe.getHauteur(); i++) {
-            int y = i * (getHeight() / graphe.getLargeur());
-            g.drawLine(0, y, getWidth(), y);
         }
     }
 

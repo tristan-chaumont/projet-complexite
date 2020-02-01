@@ -26,18 +26,58 @@ public class Sommet {
      */
     private Type type;
 
+    /**
+     * Tableau des branches du Sommet. Vaut true pour chaque branche qui existe sur ce sommet, sinon false.
+     */
+    private boolean[] branches = new boolean[4];
+
     public Sommet(int abscisse, int ordonnee, Type type) {
         x = abscisse;
         y = ordonnee;
         this.type = type;
         adjacents = new ArrayList<>();
+        attribuerBranches();
     }
 
-    public Sommet(Type type) {
-        x = 0;
-        y = 0;
-        this.type = type;
-        adjacents = new ArrayList<>();
+    /**
+     * Attribue pour chaque branche du sommet, sa valeur true ou false en fonction de s'il peut être relié ou non.
+     */
+    public void attribuerBranches() {
+        switch (type) {
+            case CROIX:
+                for (int i = 0; i < 4; i++) {
+                    branches[i] = true;
+                }
+                break;
+            case HORIZONTAL:
+                branches[1] = true;
+                branches[3] = true;
+                break;
+            case VERTICAL:
+                branches[0] = true;
+                branches[2] = true;
+                break;
+            case ANGLE_BAS_GAUCHE:
+                branches[2] = true;
+                branches[3] = true;
+                break;
+            case ANGLE_BAS_DROITE:
+                branches[1] = true;
+                branches[2] = true;
+                break;
+            case ANGLE_HAUT_GAUCHE:
+                branches[0] = true;
+                branches[3] = true;
+                break;
+            case ANGLE_HAUT_DROITE:
+                branches[0] = true;
+                branches[1] = true;
+            default:
+                for (int i = 0; i < 4; i++) {
+                    branches[i] = false;
+                }
+                break;
+        }
     }
 
     public void addAdjacent(Sommet adjacent) {
@@ -58,6 +98,10 @@ public class Sommet {
 
     public ArrayList<Sommet> getAdjacents() {
         return adjacents;
+    }
+
+    public boolean[] getBranches() {
+        return branches;
     }
 
     @Override

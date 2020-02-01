@@ -18,9 +18,9 @@ public class Graphe {
      */
     public ArrayList<Sommet> sommets;
 
-    public Graphe(int h, int l) {
-        hauteur = h;
-        largeur = l;
+    public Graphe(int hauteur, int largeur) {
+        this.hauteur = hauteur;
+        this.largeur = largeur;
         sommets = new ArrayList<>();
     }
 
@@ -33,6 +33,7 @@ public class Graphe {
      * @param parent
      *      Parent du sommet courant.
      * @return
+     *      true s'il existe un cycle, false sinon.
      */
     private boolean contientCycleUtil(Sommet sommet, boolean[] visited, Sommet parent) {
         // Marque le sommet courant comme visité
@@ -58,12 +59,12 @@ public class Graphe {
      * @return
      *      true s'il y a un cycle, false sinon.
      */
-    private boolean contientCycle() {
+    public boolean contientCycle() {
         // Tableau des sommets visités. Initialement tous à false.
         boolean[] visited = new boolean[sommets.size()];
 
         // Utilise l'algo DFS (Depth First Search) pour détecter les cycles.
-        for(int i = 0; i < visited.length; i++) {
+        for (int i = 0; i < visited.length; i++) {
             // On n'exécute pas la méthode helper si le chemin a déjà été visité.
             if (!visited[i])
                 if (contientCycleUtil(sommets.get(i), visited, null))
@@ -71,6 +72,52 @@ public class Graphe {
         }
 
         return false;
+    }
+
+    public void relierSommetsAdjacents(Sommet sommet) {
+        int x = sommet.getX();
+        int y = sommet.getY();
+
+        for (int i = 0; i < 4; i++) {
+            if (sommet.getBranches()[i]) {
+                Sommet s = null;
+                switch (i) {
+                    case 0:
+                        if (y > 0) s = getSommetDepuisCoordonnees(x, y - 1);
+                        break;
+                    case 1:
+                        if (x < largeur) s = getSommetDepuisCoordonnees(x + 1, y);
+                        break;
+                    case 2:
+                        if (y < hauteur) s = getSommetDepuisCoordonnees(x, y + 1);
+                        break;
+                    default:
+                        if (x > 0) s = getSommetDepuisCoordonnees(x - 1, y);
+                        break;
+                }
+
+                if(isReliable(sommet, i, s))
+                    addArc(sommet, s);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param from
+     *      Sommet depuis lequel on veut relier.
+     * @param branche
+     *      Dans le cas d'une croix. 0 pour la branche du haut, 1 pour la branche de droite, 2 pour la branche du bas et 3 pour la branche de gauche.
+     * @param to
+     *      Sommet sur lequel on veut relier.
+     * @return
+     *      true si il est possible d'effectuer la liaison, false sinon.
+     */
+    private boolean isReliable(Sommet from, int branche, Sommet to) {
+        if (from.getAdjacents().contains(to) || to == null)
+            return false;
+
+        return from.getBranches()[branche] && to.getBranches()[branche > 1 ? branche - 2 : branche + 2];
     }
 
     /**
