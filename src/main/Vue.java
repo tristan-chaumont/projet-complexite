@@ -22,32 +22,32 @@ public class Vue extends JFrame {
         GridLayout grid = new GridLayout(graphe.getHauteur(), graphe.getLargeur());
         panel = new JPanel(grid);
         panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        setMinimumSize(new Dimension(graphe.getLargeur() * 100, graphe.getHauteur() * 100));
         addImagesAndBorder();
         setContentPane(panel);
         setTitle("Connect");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
-        setMinimumSize(getPreferredSize());
+        //setMinimumSize(getPreferredSize());
         setVisible(true);
     }
 
     public void addImagesAndBorder() throws IOException {
         for (int i = 0; i < graphe.getHauteur(); i++) {
             for (int j = 0; j < graphe.getLargeur(); j++) {
-                // JLabel dans lequel va être stocké le sprite
-                JLabel label = new JLabel();
-
-                // Récupération du sommet grâce à ses coordonnées dans le graphe pour le mettre dans le GridLayout
                 Sommet sommet = graphe.getSommetDepuisCoordonnees(j, i);
-
-                // On lit l'image en tant que BufferedImage
                 BufferedImage sprite = getUrl(sommet);
 
-                // On redimensionne la BufferedImage vers une autre BufferedImage qui a la taille du JLabel.
-                Image resizableSprite = sprite.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-
-                // On set l'ImageIcon avec l'Image redimensionnable.
-                label.setIcon(new ImageIcon(resizableSprite));
+                // On crée un label contenant le sprite. Ce label peut être resizable.
+                JLabel label = new JLabel() {
+                    @Override
+                    public void paintComponent(Graphics g) {
+                        super.paintComponent(g);
+                        g.drawImage(sprite, 0, 0, this.getWidth(), this.getHeight(), null);
+                        repaint();
+                        revalidate();
+                    }
+                };
 
                 // On crée les bordures du JLabel
                 label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
