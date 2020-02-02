@@ -18,10 +18,13 @@ public class Graphe {
      */
     public ArrayList<Sommet> sommets;
 
+    public ArrayList<Sommet> pre;
+
     public Graphe(int hauteur, int largeur) {
         this.hauteur = hauteur;
         this.largeur = largeur;
         sommets = new ArrayList<>();
+        pre = new ArrayList<>();
     }
 
     /**
@@ -43,14 +46,17 @@ public class Graphe {
         for (Sommet s : sommet.getAdjacents()) {
             // Si le noeud adjacent n'a pas été visité, alors on réexécute la méthode sur ce nouveau sommet
             if (!visited[sommets.indexOf(s)]) {
-                if (contientCycleUtil(s, visited, sommet))
+                if (contientCycleUtil(s, visited, sommet)) {
+                    pre.add(s);
                     return true;
+                }
 
             // Si le sommet adjacent a été visité et que ce n'est pas un parent du sommet actuel, alors il y a un cycle.
-            } else if (!s.equals(parent))
+            } else if (!s.equals(parent)) {
+                pre.add(s);
                 return true;
+            }
         }
-
         return false;
     }
 
@@ -152,5 +158,9 @@ public class Graphe {
 
     public int getLargeur() {
         return largeur;
+    }
+
+    public ArrayList<Sommet> getPre() {
+        return pre;
     }
 }

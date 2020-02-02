@@ -74,34 +74,34 @@ public class Vue extends JFrame {
             case CROIX:
                 return ImageIO.read(new File(getCroixUrl(sommet)));
             case VERTICAL:
-                return ImageIO.read(new File(sommet.isVisited() ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
+                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
             case HORIZONTAL:
-                return ImageIO.read(new File(sommet.isVisited() ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
+                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
             case ANGLE_HAUT_DROITE:
-                return ImageIO.read(new File(sommet.isVisited() ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
+                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
             case ANGLE_BAS_DROITE:
-                return ImageIO.read(new File(sommet.isVisited() ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
+                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
             case ANGLE_HAUT_GAUCHE:
-                return ImageIO.read(new File(sommet.isVisited() ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
+                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
             case ANGLE_BAS_GAUCHE:
-                return ImageIO.read(new File(sommet.isVisited() ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
+                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
             default:
                 return ImageIO.read(new File("sprites/blanc.png"));
         }
     }
 
     public String getCroixUrl(Sommet sommet) {
-        if (!sommet.isVisited()) return "sprites/croix_vide.png";
+        if (!graphe.getPre().contains(sommet)) return "sprites/croix_vide.png";
 
-        ArrayList<Sommet> sommetsVisites = (ArrayList<Sommet>) sommet.getAdjacents().stream().filter(Sommet::isVisited).collect(Collectors.toList());
+        ArrayList<Sommet> sommetsAdjInCycle = (ArrayList<Sommet>) sommet.getAdjacents().stream().filter(s -> graphe.getPre().contains(s)).collect(Collectors.toList());
 
-        if(sommetsVisites.size() == 4) return "sprites/croix_pleine.png";
+        if(sommetsAdjInCycle.size() == 4) return "sprites/croix_pleine.png";
 
         int[] branches = new int[2];
 
-        for (int i = 0; i < sommetsVisites.size(); i++) {
-            int x = sommetsVisites.get(i).getX() - sommet.getX();
-            int y = sommetsVisites.get(i).getY() - sommet.getY();
+        for (int i = 0; i < sommetsAdjInCycle.size(); i++) {
+            int x = sommetsAdjInCycle.get(i).getX() - sommet.getX();
+            int y = sommetsAdjInCycle.get(i).getY() - sommet.getY();
 
             if (x == -1 && y == 0) branches[i] = 3;
             else if (x == 1 && y == 0) branches[i] = 1;
@@ -109,11 +109,12 @@ public class Vue extends JFrame {
             else branches[i] = 2;
         }
 
-        if((branches[0] == 0 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 0)) return "sprites/vertical_plein.png";
-        else if((branches[0] == 1 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 1)) return "sprites/horizontal_plein/png";
-        else if((branches[0] == 0 && branches[1] == 1) || (branches[0] == 1 && branches[1] == 0)) return "sprites/angle_haut_droite_plein.png";
-        else if((branches[0] == 1 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 1)) return "sprites/angle_bas_droite_plein.png";
-        else if((branches[0] == 2 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 2)) return "sprites/angle_bas_gauche_plein.png";
-        else return "sprites/angle_haut_gauche_plein.png";
+        if ((branches[0] == 0 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 0)) return "sprites/croix_vertical_plein.png";
+        else if ((branches[0] == 1 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 1)) return "sprites/croix_horizontal_plein/png";
+        else if ((branches[0] == 0 && branches[1] == 1) || (branches[0] == 1 && branches[1] == 0)) return "sprites/croix_angle_haut_droite_plein.png";
+        else if ((branches[0] == 1 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 1)) return "sprites/croix_angle_bas_droite_plein.png";
+        else if ((branches[0] == 2 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 2)) return "sprites/croix_angle_bas_gauche_plein.png";
+        else if ((branches[0] == 0 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 0)) return "sprites/croix_angle_haut_gauche_plein.png";
+        else return "sprites/croix_vide.png";
     }
 }
