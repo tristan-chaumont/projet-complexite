@@ -97,7 +97,7 @@ public class Vue extends JFrame {
 
         if(sommetsAdjInCycle.size() == 4) return "sprites/croix_pleine.png";
 
-        int[] branches = new int[2];
+        int[] branches = new int[sommetsAdjInCycle.size()];
 
         for (int i = 0; i < sommetsAdjInCycle.size(); i++) {
             int x = sommetsAdjInCycle.get(i).getX() - sommet.getX();
