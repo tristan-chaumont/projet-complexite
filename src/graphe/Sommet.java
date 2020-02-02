@@ -32,6 +32,11 @@ public class Sommet {
     private boolean[] branches = new boolean[4];
 
     /**
+     * Si le sommet fait partie du plus long cycle ou non.
+     */
+    private boolean visited;
+
+    /**
      * Constructeur du sommet. Crée une nouvelle ArrayList de sommets adjacents vide. Attribue les valeurs au tableau branches en fonction du type du sommet.
      * @param abscisse
      *      Abscisse du sommet sur le plateau.
@@ -45,6 +50,7 @@ public class Sommet {
         y = ordonnee;
         this.type = type;
         adjacents = new ArrayList<>();
+        visited = false;
         attribuerBranches();
     }
 
@@ -111,6 +117,14 @@ public class Sommet {
 
     public boolean[] getBranches() {
         return branches;
+    }
+
+    public void setVisited() {
+        visited = true;
+    }
+
+    public boolean isVisited() {
+        return visited;
     }
 
     @Override

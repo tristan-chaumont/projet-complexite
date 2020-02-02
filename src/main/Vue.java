@@ -6,48 +6,53 @@ import graphe.Sommet;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Vue extends JFrame {
 
     private Graphe graphe;
+    private JPanel panel;
 
-    public Vue(Graphe graphe) {
+    public Vue(Graphe graphe) throws IOException {
         this.graphe = graphe;
-        JPanel panel = new JPanel();
-        add(panel);
-        setMinimumSize(new Dimension(500, 500));
-        setSize(new Dimension(graphe.getLargeur() * 100, graphe.getHauteur() * 100));
+        GridLayout grid = new GridLayout(graphe.getHauteur(), graphe.getLargeur());
+        panel = new JPanel(grid);
+        panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        addImagesAndBorder();
+        setContentPane(panel);
+        setTitle("Connect");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        pack();
+        setMinimumSize(getPreferredSize());
         setVisible(true);
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
-        // On dessine les sprites
+    public void addImagesAndBorder() throws IOException {
         for (int i = 0; i < graphe.getHauteur(); i++) {
             for (int j = 0; j < graphe.getLargeur(); j++) {
-                Sommet sommet = graphe.getSommetDepuisCoordonnees(j, i);
-                try {
-                    // On dessine les images
-                    g.drawImage(getUrl(sommet),
-                            j * (getWidth() / graphe.getLargeur()),
-                            i * (getHeight() / graphe.getHauteur()),
-                            getWidth() / graphe.getLargeur(),
-                            getHeight() / graphe.getHauteur(),
-                            null);
+                // JLabel dans lequel va être stocké le sprite
+                JLabel label = new JLabel();
 
-                    // On dessine les séparations
-                    g.drawRect(j * (getWidth() / graphe.getLargeur()),
-                            i * (getHeight() / graphe.getHauteur()),
-                            getWidth() / graphe.getLargeur(),
-                            getHeight() / graphe.getHauteur());
-                } catch (IOException e) {
-                    System.out.println("Image introuvable : mauvais chemin ?");
-                }
+                // Récupération du sommet grâce à ses coordonnées dans le graphe pour le mettre dans le GridLayout
+                Sommet sommet = graphe.getSommetDepuisCoordonnees(j, i);
+
+                // On lit l'image en tant que BufferedImage
+                BufferedImage sprite = getUrl(sommet);
+
+                // On redimensionne la BufferedImage vers une autre BufferedImage qui a la taille du JLabel.
+                Image resizableSprite = sprite.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+
+                // On set l'ImageIcon avec l'Image redimensionnable.
+                label.setIcon(new ImageIcon(resizableSprite));
+
+                // On crée les bordures du JLabel
+                label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+                panel.add(label);
             }
         }
     }
@@ -61,27 +66,54 @@ public class Vue extends JFrame {
      * @throws IOException
      *      Si le fichier est introuvable.
      */
-    public Image getUrl(Sommet sommet) throws IOException {
+    public BufferedImage getUrl(Sommet sommet) throws IOException {
         if(sommet == null)
             return ImageIO.read(new File("sprites/blanc.png"));
 
         switch (sommet.getType()) {
             case CROIX:
-                return ImageIO.read(new File("sprites/croix_vide.png"));
+                return ImageIO.read(new File(getCroixUrl(sommet)));
             case VERTICAL:
-                return ImageIO.read(new File("sprites/vertical_vide.png"));
+                return ImageIO.read(new File(sommet.isVisited() ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
             case HORIZONTAL:
-                return ImageIO.read(new File("sprites/horizontal_vide.png"));
+                return ImageIO.read(new File(sommet.isVisited() ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
             case ANGLE_HAUT_DROITE:
-                return ImageIO.read(new File("sprites/angle_haut_droite_vide.png"));
+                return ImageIO.read(new File(sommet.isVisited() ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
             case ANGLE_BAS_DROITE:
-                return ImageIO.read(new File("sprites/angle_bas_droite_vide.png"));
+                return ImageIO.read(new File(sommet.isVisited() ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
             case ANGLE_HAUT_GAUCHE:
-                return ImageIO.read(new File("sprites/angle_haut_gauche_vide.png"));
+                return ImageIO.read(new File(sommet.isVisited() ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
             case ANGLE_BAS_GAUCHE:
-                return ImageIO.read(new File("sprites/angle_bas_gauche_vide.png"));
+                return ImageIO.read(new File(sommet.isVisited() ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
             default:
                 return ImageIO.read(new File("sprites/blanc.png"));
         }
+    }
+
+    public String getCroixUrl(Sommet sommet) {
+        if (!sommet.isVisited()) return "sprites/croix_vide.png";
+
+        ArrayList<Sommet> sommetsVisites = (ArrayList<Sommet>) sommet.getAdjacents().stream().filter(Sommet::isVisited).collect(Collectors.toList());
+
+        if(sommetsVisites.size() == 4) return "sprites/croix_pleine.png";
+
+        int[] branches = new int[2];
+
+        for (int i = 0; i < sommetsVisites.size(); i++) {
+            int x = sommetsVisites.get(i).getX() - sommet.getX();
+            int y = sommetsVisites.get(i).getY() - sommet.getY();
+
+            if (x == -1 && y == 0) branches[i] = 3;
+            else if (x == 1 && y == 0) branches[i] = 1;
+            else if (x == 0 && y == -1) branches[i] = 0;
+            else branches[i] = 2;
+        }
+
+        if((branches[0] == 0 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 0)) return "sprites/vertical_plein.png";
+        else if((branches[0] == 1 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 1)) return "sprites/horizontal_plein/png";
+        else if((branches[0] == 0 && branches[1] == 1) || (branches[0] == 1 && branches[1] == 0)) return "sprites/angle_haut_droite_plein.png";
+        else if((branches[0] == 1 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 1)) return "sprites/angle_bas_droite_plein.png";
+        else if((branches[0] == 2 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 2)) return "sprites/angle_bas_gauche_plein.png";
+        else return "sprites/angle_haut_gauche_plein.png";
     }
 }
