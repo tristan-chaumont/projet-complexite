@@ -21,6 +21,7 @@ public class Vue extends JFrame {
     public Vue(Plateau plateau) throws IOException {
         this.plateau = plateau;
         grid = new GridLayout(plateau.getHauteur(), plateau.getLargeur());
+        panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         panel = new JPanel(grid);
         setPlateauSize();

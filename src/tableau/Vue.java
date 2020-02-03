@@ -34,12 +34,12 @@ public class Vue extends JFrame {
         }
     }
 	
-	public static void main(String args[]) {
+	/*public static void main(String args[]) {
 		Vue vue = new Vue();
 		Plateau plateau = new Plateau(taille);
 		plateau.genererPlateau();
 		cases = plateau.getCases();
 		vue.setVisible(true);
-	}
+	}*/
 
 }
