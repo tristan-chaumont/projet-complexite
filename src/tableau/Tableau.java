@@ -9,7 +9,7 @@ import java.util.Collections;
  * Classe Plateau
  * Represente le plateau
  */
-public class Plateau {
+public class Tableau {
 	
 	/**
 	 * Attributs :
@@ -20,7 +20,8 @@ public class Plateau {
 	 */
 
     private Case[][] cases;
-    private int taille;
+    private int hauteur;
+    private int largeur;
     
     /**
      * Constructeur
@@ -28,9 +29,10 @@ public class Plateau {
      * 			taille du plateau
      */
 
-    public Plateau(int size) {
-    	taille = size;
-    	cases = new Case[taille][taille];
+    public Tableau(int h, int l) {
+    	hauteur = h;
+    	largeur = l;
+    	cases = new Case[h][l];
     }
     
     /**
@@ -39,8 +41,8 @@ public class Plateau {
      */
 
 	public void genererPlateau() {
-    	for(int i = 0; i < taille; i++) {
-    		for(int j = 0; j < taille; j++) {
+    	for(int i = 0; i < hauteur; i++) {
+    		for(int j = 0; j < largeur; j++) {
     			int random = (int)(Math.random() * 8);
     			Type type = null;
     			switch(random) {
@@ -113,7 +115,7 @@ public class Plateau {
 			cases[4][3] = new Case(Type.HORIZONTAL);
 			cases[4][4] = new Case(Type.ANGLE_BAS_DROITE);
 	}
-	
+
 	/**
 	 * Methode getCycles
 	 * Permet d'obtenir la liste des différents cycles trouvés
@@ -129,8 +131,8 @@ public class Plateau {
     	boolean continu = false;
     	String last = "";
     	
-    	for(int i = 0; i < cases.length; i++) {
-    		for(int j = 0; j < cases.length; j++) {
+    	for(int i = 0; i < hauteur; i++) {
+    		for(int j = 0; j < largeur; j++) {
     			if((!continu) && (cases[i][j].getType() != Type.BLANC) && (cases[i][j].estCompte() == false)) {
     				continu = true;
     				start = cases[i][j];
@@ -219,11 +221,32 @@ public class Plateau {
    /****GETTERS & SETTERS****/
   /*************************/
     
+    public Case getCase(int i, int j) {
+    	return cases[i][j];
+    }
+    
     public Case[][] getCases() {
 		return cases;
 	}
 
 	public void setCases(Case[][] cases) {
 		this.cases = cases;
+	}
+	
+	
+	public int getHauteur() {
+		return hauteur;
+	}
+	
+	public int getLargeur() {
+		return largeur;
+	}
+
+	public void setHauteur(int h) {
+		this.hauteur = h;
+	}
+	
+	public void setLargeur(int l) {
+		this.largeur = l;
 	}
 }

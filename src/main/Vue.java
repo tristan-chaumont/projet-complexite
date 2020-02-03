@@ -2,7 +2,7 @@ package main;
 
 import graphe.Graphe;
 import graphe.Sommet;
-import tableau.Plateau;
+import tableau.Tableau;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class Vue extends JFrame {
 
     private Graphe graphe;
+    private Tableau plateau;
     private JPanel panel;
     private GridLayout grid;
 
@@ -27,8 +28,15 @@ public class Vue extends JFrame {
             panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
             setPlateauSize();
             addImagesAndBorder();
-    	}else if(obj instanceof Plateau) {
+    	}else if(obj instanceof Tableau) {
+    		this.plateau = (Tableau) obj;
+    		this.plateau.genererPlateauCorrect();
     		
+    		grid = new GridLayout(((Tableau)obj).getHauteur(), ((Tableau)obj).getLargeur());
+            panel = new JPanel(grid);
+            panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            setPlateauSize();
+            //addImagesAndBorder();
     	}
     	
         setContentPane(panel);
@@ -40,8 +48,8 @@ public class Vue extends JFrame {
     }
 
     public void setPlateauSize() {
-        int width, height;
-        if(graphe.getLargeur() * 50 > 1920 && graphe.getHauteur() * 50 > 1080) {
+        int width = 0, height = 0;
+    	if(graphe.getLargeur() * 50 > 1920 && graphe.getHauteur() * 50 > 1080) {
             GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
             width = gd.getDisplayMode().getWidth();
             height = gd.getDisplayMode().getHeight();
@@ -49,6 +57,7 @@ public class Vue extends JFrame {
             width = graphe.getLargeur() * 50;
             height = graphe.getHauteur() * 50;
         }
+        
         setMinimumSize(new Dimension(width, height));
     }
 
