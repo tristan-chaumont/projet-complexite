@@ -22,7 +22,7 @@ public class Vue extends JFrame {
         GridLayout grid = new GridLayout(graphe.getHauteur(), graphe.getLargeur());
         panel = new JPanel(grid);
         panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        setMinimumSize(new Dimension(graphe.getLargeur() * 100, graphe.getHauteur() * 100));
+        setPlateauSize();
         addImagesAndBorder();
         setContentPane(panel);
         setTitle("Connect");
@@ -30,6 +30,19 @@ public class Vue extends JFrame {
         pack();
         //setMinimumSize(getPreferredSize());
         setVisible(true);
+    }
+
+    public void setPlateauSize() {
+        int width, height;
+        if(graphe.getLargeur() * 50 > 1920 && graphe.getHauteur() * 50 > 1080) {
+            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            width = gd.getDisplayMode().getWidth();
+            height = gd.getDisplayMode().getHeight();
+        } else {
+            width = graphe.getLargeur() * 50;
+            height = graphe.getHauteur() * 50;
+        }
+        setMinimumSize(new Dimension(width, height));
     }
 
     public void addImagesAndBorder() throws IOException {
@@ -50,7 +63,7 @@ public class Vue extends JFrame {
                 };
 
                 // On crée les bordures du JLabel
-                label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                label.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 75)));
 
                 panel.add(label);
             }
@@ -109,12 +122,20 @@ public class Vue extends JFrame {
             else branches[i] = 2;
         }
 
-        if ((branches[0] == 0 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 0)) return "sprites/croix_vertical_plein.png";
-        else if ((branches[0] == 1 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 1)) return "sprites/croix_horizontal_plein/png";
-        else if ((branches[0] == 0 && branches[1] == 1) || (branches[0] == 1 && branches[1] == 0)) return "sprites/croix_angle_haut_droite_plein.png";
-        else if ((branches[0] == 1 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 1)) return "sprites/croix_angle_bas_droite_plein.png";
-        else if ((branches[0] == 2 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 2)) return "sprites/croix_angle_bas_gauche_plein.png";
-        else if ((branches[0] == 0 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 0)) return "sprites/croix_angle_haut_gauche_plein.png";
-        else return "sprites/croix_vide.png";
+        if (branches.length == 2) {
+            if ((branches[0] == 0 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 0))
+                return "sprites/croix_vertical_plein.png";
+            else if ((branches[0] == 1 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 1))
+                return "sprites/croix_horizontal_plein.png";
+            else if ((branches[0] == 0 && branches[1] == 1) || (branches[0] == 1 && branches[1] == 0))
+                return "sprites/croix_angle_haut_droite_plein.png";
+            else if ((branches[0] == 1 && branches[1] == 2) || (branches[0] == 2 && branches[1] == 1))
+                return "sprites/croix_angle_bas_droite_plein.png";
+            else if ((branches[0] == 2 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 2))
+                return "sprites/croix_angle_bas_gauche_plein.png";
+            else if ((branches[0] == 0 && branches[1] == 3) || (branches[0] == 3 && branches[1] == 0))
+                return "sprites/croix_angle_haut_gauche_plein.png";
+        }
+        return "sprites/croix_vide.png";
     }
 }
