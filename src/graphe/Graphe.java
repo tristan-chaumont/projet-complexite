@@ -114,7 +114,7 @@ public class Graphe {
     }
 
     /**
-     *
+     * Vérifie si 2 sommets sont reliables.
      * @param from
      *      Sommet depuis lequel on veut relier.
      * @param branche

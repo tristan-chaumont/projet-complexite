@@ -110,7 +110,7 @@ public class Global {
         Graphe g;
         do {
             //g = new Graphe(50, 50);
-            g = new Graphe((int) (Math.random() * 15) + 5, (int) (Math.random() * 15) + 5);
+            g = new Graphe((int) (Math.random() * 5) + 15, (int) (Math.random() * 5) + 15);
             for (int i = 0; i < g.getHauteur(); i++) {
                 for (int j = 0; j < g.getLargeur(); j++) {
                     Sommet sommet = new Sommet(j, i, Global.genererTypeAleatoire());
