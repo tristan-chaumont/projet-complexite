@@ -1,8 +1,7 @@
 package main;
 
-import graphe.Graphe;
-import graphe.Sommet;
-import tableau.Tableau;
+import plateau.Graphe;
+import plateau.Sommet;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,30 +14,17 @@ import java.util.stream.Collectors;
 
 public class Vue extends JFrame {
 
-    private Graphe graphe;
-    private Tableau plateau;
+    private Plateau plateau;
     private JPanel panel;
     private GridLayout grid;
 
-    public Vue(Object obj) throws IOException {
-    	if(obj instanceof Graphe) {
-    		this.graphe = (Graphe) obj;
-            grid = new GridLayout(((Graphe)obj).getHauteur(), ((Graphe)obj).getLargeur());
-            panel = new JPanel(grid);
-            panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-            setPlateauSize();
-            addImagesAndBorder();
-    	}else if(obj instanceof Tableau) {
-    		this.plateau = (Tableau) obj;
-    		this.plateau.genererPlateauCorrect();
-    		
-    		grid = new GridLayout(((Tableau)obj).getHauteur(), ((Tableau)obj).getLargeur());
-            panel = new JPanel(grid);
-            panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-            setPlateauSize();
-            //addImagesAndBorder();
-    	}
-    	
+    public Vue(Plateau plateau) throws IOException {
+        this.plateau = plateau;
+        grid = new GridLayout(plateau.getHauteur(), plateau.getLargeur());
+        panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        panel = new JPanel(grid);
+        setPlateauSize();
+        addImagesAndBorder();
         setContentPane(panel);
         setTitle("Connect");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -49,22 +35,29 @@ public class Vue extends JFrame {
 
     public void setPlateauSize() {
         int width = 0, height = 0;
-    	if(graphe.getLargeur() * 50 > 1920 && graphe.getHauteur() * 50 > 1080) {
+    	if(plateau.getLargeur() * 50 > 1920 && plateau.getHauteur() * 50 > 1080) {
             GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
             width = gd.getDisplayMode().getWidth();
             height = gd.getDisplayMode().getHeight();
         } else {
-            width = graphe.getLargeur() * 50;
-            height = graphe.getHauteur() * 50;
+            width = plateau.getLargeur() * 50;
+            height = plateau.getHauteur() * 50;
         }
         
         setMinimumSize(new Dimension(width, height));
     }
 
     public void addImagesAndBorder() throws IOException {
-        for (int i = 0; i < graphe.getHauteur(); i++) {
-            for (int j = 0; j < graphe.getLargeur(); j++) {
-                Sommet sommet = graphe.getSommetDepuisCoordonnees(j, i);
+        if (plateau instanceof Graphe)
+            addImagesAndBorderGraphe();
+        else
+            addImagesAndBorderPlateau();
+    }
+
+    private void addImagesAndBorderGraphe() throws IOException {
+        for (int i = 0; i < plateau.getHauteur(); i++) {
+            for (int j = 0; j < plateau.getLargeur(); j++) {
+                Sommet sommet = ((Graphe) plateau).getSommetDepuisCoordonnees(j, i);
                 BufferedImage sprite = getUrl(sommet);
 
                 // On crée un label contenant le sprite. Ce label peut être resizable.
@@ -86,6 +79,10 @@ public class Vue extends JFrame {
         }
     }
 
+    private void addImagesAndBorderPlateau() {
+
+    }
+
     /**
      * Crée une image à partir de l'url du sprite et du Type du sommet.
      * @param sommet
@@ -99,30 +96,33 @@ public class Vue extends JFrame {
         if(sommet == null)
             return ImageIO.read(new File("sprites/blanc.png"));
 
+        Graphe plateau = (Graphe) this.plateau;
+
         switch (sommet.getType()) {
             case CROIX:
                 return ImageIO.read(new File(getCroixUrl(sommet)));
             case VERTICAL:
-                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
+                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
             case HORIZONTAL:
-                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
+                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
             case ANGLE_HAUT_DROITE:
-                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
+                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
             case ANGLE_BAS_DROITE:
-                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
+                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
             case ANGLE_HAUT_GAUCHE:
-                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
+                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
             case ANGLE_BAS_GAUCHE:
-                return ImageIO.read(new File(graphe.getPre().contains(sommet) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
+                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
             default:
                 return ImageIO.read(new File("sprites/blanc.png"));
         }
     }
 
     public String getCroixUrl(Sommet sommet) {
-        if (!graphe.getPre().contains(sommet)) return "sprites/croix_vide.png";
+        Graphe plateau = (Graphe) this.plateau;
+        if (!plateau.getPre().contains(sommet)) return "sprites/croix_vide.png";
 
-        ArrayList<Sommet> sommetsAdjInCycle = (ArrayList<Sommet>) sommet.getAdjacents().stream().filter(s -> graphe.getPre().contains(s)).collect(Collectors.toList());
+        ArrayList<Sommet> sommetsAdjInCycle = (ArrayList<Sommet>) sommet.getAdjacents().stream().filter(s -> plateau.getPre().contains(s)).collect(Collectors.toList());
 
         if(sommetsAdjInCycle.size() == 4) return "sprites/croix_pleine.png";
 

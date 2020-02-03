@@ -1,6 +1,7 @@
 package tableau;
 
 import main.Global.*;
+import main.Plateau;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,30 +10,18 @@ import java.util.Collections;
  * Classe Plateau
  * Represente le plateau
  */
-public class Tableau {
+public class Tableau extends Plateau {
 	
 	/**
 	 * Attributs :
 	 * cases
 	 * 		tableau multidimentionnels de cases permettant de représenter le plateau
-	 * taille
-	 * 		taille du tableau
 	 */
-
     private Case[][] cases;
-    private int hauteur;
-    private int largeur;
-    
-    /**
-     * Constructeur
-     * @param size
-     * 			taille du plateau
-     */
 
-    public Tableau(int h, int l) {
-    	hauteur = h;
-    	largeur = l;
-    	cases = new Case[h][l];
+    public Tableau(int hauteur, int largeur) {
+    	super(hauteur, largeur);
+    	cases = new Case[hauteur][largeur];
     }
     
     /**

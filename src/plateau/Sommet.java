@@ -1,4 +1,4 @@
-package graphe;
+package plateau;
 
 import main.Global.*;
 

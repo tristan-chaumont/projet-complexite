@@ -1,4 +1,6 @@
-package graphe;
+package plateau;
+
+import main.Plateau;
 
 import java.util.ArrayList;
 
@@ -6,12 +8,7 @@ import java.util.ArrayList;
  * Classe représentant un Graphe avec ses sommets ainsi que les méthodes afin de trouver un cycle.
  * @author Tristan
  */
-public class Graphe {
-
-    /**
-     * Hauteur et largeur du plateau
-     */
-    private int hauteur, largeur;
+public class Graphe extends Plateau {
 
     /**
      * Liste des sommets du graphe
@@ -21,8 +18,7 @@ public class Graphe {
     public ArrayList<Sommet> pre;
 
     public Graphe(int hauteur, int largeur) {
-        this.hauteur = hauteur;
-        this.largeur = largeur;
+        super(hauteur, largeur);
         sommets = new ArrayList<>();
         pre = new ArrayList<>();
     }
@@ -150,14 +146,6 @@ public class Graphe {
 
     public Sommet getSommetDepuisCoordonnees(int x, int y) {
         return sommets.stream().filter(s -> s.getX() == x && s.getY() == y).findFirst().orElse(null);
-    }
-
-    public int getHauteur() {
-        return hauteur;
-    }
-
-    public int getLargeur() {
-        return largeur;
     }
 
     public ArrayList<Sommet> getPre() {

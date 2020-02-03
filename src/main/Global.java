@@ -1,7 +1,7 @@
 package main;
 
-import graphe.Graphe;
-import graphe.Sommet;
+import plateau.Graphe;
+import plateau.Sommet;
 
 /**
  * Classe globale qui regroupe toutes les informations qui sont partagées par la méthode du graphe et la méthode du tableau
