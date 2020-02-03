@@ -78,18 +78,56 @@ public class Plateau {
     }
 	
 	/**
-	 * Methode getChemins
-	 * Permet d'obtenir la taille de tous les chemins possibles
+	 * Méthode genererPlateauCorrect
+	 * Permet de générer un plateau avec des cycles correct
+	 */
+	
+	public void genererPlateauCorrect() {
+			cases[0][0] = new Case(Type.ANGLE_HAUT_GAUCHE);
+			cases[0][1] = new Case(Type.ANGLE_HAUT_DROITE);
+			cases[0][2] = new Case(Type.BLANC);
+			cases[0][3] = new Case(Type.BLANC);
+			cases[0][4] = new Case(Type.BLANC);
+			
+			cases[1][0] = new Case(Type.ANGLE_BAS_GAUCHE);
+			cases[1][1] = new Case(Type.ANGLE_BAS_DROITE);
+			cases[1][2] = new Case(Type.BLANC);
+			cases[1][3] = new Case(Type.BLANC);
+			cases[1][4] = new Case(Type.BLANC);
+			
+			cases[2][0] = new Case(Type.BLANC);
+			cases[2][1] = new Case(Type.BLANC);
+			cases[2][2] = new Case(Type.ANGLE_HAUT_GAUCHE);
+			cases[2][3] = new Case(Type.ANGLE_HAUT_DROITE);
+			cases[2][4] = new Case(Type.BLANC);
+
+			cases[3][0] = new Case(Type.BLANC);
+			cases[3][1] = new Case(Type.BLANC);
+			cases[3][2] = new Case(Type.VERTICAL);
+			cases[3][3] = new Case(Type.CROIX);
+			cases[3][4] = new Case(Type.ANGLE_HAUT_DROITE);
+			
+			cases[4][0] = new Case(Type.BLANC);
+			cases[4][1] = new Case(Type.BLANC);
+			cases[4][2] = new Case(Type.ANGLE_BAS_GAUCHE);
+			cases[4][3] = new Case(Type.HORIZONTAL);
+			cases[4][4] = new Case(Type.ANGLE_BAS_DROITE);
+	}
+	
+	/**
+	 * Methode getCycles
+	 * Permet d'obtenir la liste des différents cycles trouvés
 	 * @return
-	 * 			la liste de la taille des chemins
+	 * 			la liste des cycles trouvés
 	 */
     
-    public ArrayList<Integer> getChemins() {
+    public ArrayList<ArrayList<Case>> getCycles() {
+    	ArrayList<ArrayList<Case>> listCycles = new ArrayList<ArrayList<Case>>();
+    	ArrayList<Case> listCases = new ArrayList<Case>();
+    	
     	Case start;
     	boolean continu = false;
-    	int countChemin = 0;
     	String last = "";
-    	ArrayList<Integer> listChemins = new ArrayList<Integer>();
     	
     	for(int i = 0; i < cases.length; i++) {
     		for(int j = 0; j < cases.length; j++) {
@@ -97,6 +135,7 @@ public class Plateau {
     				continu = true;
     				start = cases[i][j];
     				cases[i][j].setCaseCompte();
+    				listCases.add(cases[i][j]);
     				
     				while(continu) {
     					//System.out.println("(" +i +";" +j +")");
@@ -104,46 +143,59 @@ public class Plateau {
     						cases[i][j+1].setCaseCompte();
     						j++;
     						last = "Droite";
+    						
+    						listCases.add(cases[i][j]);
     					}else if((i < cases.length-1) && (cases[i][j].caseCorrect(cases[i+1][j], last)) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
     						cases[i+1][j].setCaseCompte();
     						i++;
     						last = "Bas";
+    						
+    						listCases.add(cases[i][j]);
     					}else if((j > 0) && (cases[i][j].caseCorrect(cases[i][j-1], last)) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
     						cases[i][j-1].setCaseCompte();
 							j--;
 							last = "Gauche";
+							
+							listCases.add(cases[i][j]);
     					}else if((i > 0) && (cases[i][j].caseCorrect(cases[i-1][j], last)) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
     						cases[i-1][j].setCaseCompte();
     						i--;
     						last = "Haut";
+    						
+    						listCases.add(cases[i][j]);
     					}else {
     						continu = false;
     					}
     					
-    					countChemin++;
-    					
     					if(cases[i][j] == start) {
-    						listChemins.add(countChemin);
-    						countChemin = 0;
+    						listCycles.add(listCases);
+    						listCases.clear();
     						continu = false;
     					}
     				}
     			}
     		}
     	}
-    	return listChemins;
+    	return listCycles;
     }
     
     /**
-     * Methode getMeilleur
+     * Methode getMeilleurCycle
      * @param liste
-     * 			liste des circuits
+     * 			liste de cycles
      * @return
-     * 			la taille du meilleur circuit
+     * 			le meilleur cycle
      */
     
-    public int getMeilleur(ArrayList<Integer> liste) {
-    	return Collections.max(liste);
+    public ArrayList<Case> getMeilleurCycle(ArrayList<ArrayList<Case>> liste) {
+    	ArrayList<Case> listCases = liste.get(0);
+    	for(int i = 1; i < liste.size(); i++) {
+    		if(liste.get(i).size() > listCases.size()) {
+    			listCases = liste.get(i);
+    		}
+    	}
+    	
+    	return listCases;
     }
     
     /**

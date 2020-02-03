@@ -10,7 +10,7 @@ import main.Global.Type;
 public class Case {
 
 	/**
-	 * Booléen permettant de savoir si la case a été comptée
+	 * Boolï¿½en permettant de savoir si la case a ï¿½tï¿½ comptï¿½e
 	 */
 	boolean compte;
 
@@ -59,19 +59,19 @@ public class Case {
 		    			res = true;
 		    		}
 	    		}
-	    	}else if(this.type == Type.ANGLE_HAUT_GAUCHE) {
+	    	}else if(this.type == Type.ANGLE_BAS_DROITE) {
 	    		if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 	    			res = true;
 	    		}
-	    	}else if(this.type == Type.ANGLE_HAUT_DROITE) {
+	    	}else if(this.type == Type.ANGLE_BAS_GAUCHE) {
 	    		if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 	    			res = true;
 	    		}
-	    	}else if(this.type == Type.ANGLE_BAS_GAUCHE) {
+	    	}else if(this.type == Type.ANGLE_HAUT_DROITE) {
 	    		if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 	    			res = true;
 	    		}
-	    	}else if(this.type == Type.ANGLE_BAS_DROITE) {
+	    	}else if(this.type == Type.ANGLE_HAUT_GAUCHE) {
 	    		if(suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 	    			res = true;
 	    		}
@@ -83,30 +83,10 @@ public class Case {
     
     /**
      * Methode toString
-     * ! Methode a supprimer !
      */
     
     public String toString() {
-    	String res = "";
-    	if(this.type == Type.CROIX) {
-    		res = "+";
-    	}else if(this.type == Type.BLANC) {
-    		res = " ";
-    	}else if(this.type == Type.VERTICAL) {
-    		res = "|";
-    	}else if(this.type == Type.HORIZONTAL) {
-    		res = "-";
-    	}else if(this.type == Type.ANGLE_HAUT_GAUCHE) {
-    		res = "|¯";
-    	}else if(this.type == Type.ANGLE_HAUT_DROITE) {
-    		res = "¯|";
-    	}else if(this.type == Type.ANGLE_BAS_GAUCHE) {
-    		res = "|_";
-    	}else if(this.type == Type.ANGLE_BAS_DROITE) {
-    		res = "_|";
-    	}
-    	
-    	return res;
+    	return this.type.toString();
     }
     
     /*************************/

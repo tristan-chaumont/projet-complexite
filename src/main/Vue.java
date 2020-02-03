@@ -2,6 +2,7 @@ package main;
 
 import graphe.Graphe;
 import graphe.Sommet;
+import tableau.Plateau;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,14 +17,20 @@ public class Vue extends JFrame {
 
     private Graphe graphe;
     private JPanel panel;
+    private GridLayout grid;
 
-    public Vue(Graphe graphe) throws IOException {
-        this.graphe = graphe;
-        GridLayout grid = new GridLayout(graphe.getHauteur(), graphe.getLargeur());
-        panel = new JPanel(grid);
-        panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        setPlateauSize();
-        addImagesAndBorder();
+    public Vue(Object obj) throws IOException {
+    	if(obj instanceof Graphe) {
+    		this.graphe = (Graphe) obj;
+            grid = new GridLayout(((Graphe)obj).getHauteur(), ((Graphe)obj).getLargeur());
+            panel = new JPanel(grid);
+            panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            setPlateauSize();
+            addImagesAndBorder();
+    	}else if(obj instanceof Plateau) {
+    		
+    	}
+    	
         setContentPane(panel);
         setTitle("Connect");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
