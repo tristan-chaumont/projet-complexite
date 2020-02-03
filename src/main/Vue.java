@@ -2,6 +2,8 @@ package main;
 
 import plateau.Graphe;
 import plateau.Sommet;
+import tableau.Case;
+import tableau.Tableau;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,9 +19,15 @@ public class Vue extends JFrame {
     private Plateau plateau;
     private JPanel panel;
     private GridLayout grid;
+    
+    private ArrayList<Case> cycle;
 
     public Vue(Plateau plateau) throws IOException {
         this.plateau = plateau;
+        if(plateau instanceof Tableau) {
+        	((Tableau) plateau).genererPlateauCorrect();
+        	cycle = ((Tableau) plateau).getMeilleurCycle(((Tableau)plateau).getCycles());
+        }
         grid = new GridLayout(plateau.getHauteur(), plateau.getLargeur());
         panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -52,7 +60,7 @@ public class Vue extends JFrame {
         if (plateau instanceof Graphe)
             addImagesAndBorderGraphe();
         else
-            addImagesAndBorderPlateau();
+            addImagesAndBorderTableau();
     }
 
     private void addImagesAndBorderGraphe() throws IOException {
@@ -80,8 +88,29 @@ public class Vue extends JFrame {
         }
     }
 
-    private void addImagesAndBorderPlateau() {
+    private void addImagesAndBorderTableau() throws IOException {
+    	for (int i = 0; i < plateau.getHauteur(); i++) {
+            for (int j = 0; j < plateau.getLargeur(); j++) {
+            	Case c = ((Tableau) plateau).getCase(i,j);
+                BufferedImage sprite = getUrl(c);
 
+                // On crée un label contenant le sprite. Ce label peut être resizable.
+                JLabel label = new JLabel() {
+                    @Override
+                    public void paintComponent(Graphics g) {
+                        super.paintComponent(g);
+                        g.drawImage(sprite, 0, 0, this.getWidth(), this.getHeight(), null);
+                        repaint();
+                        revalidate();
+                    }
+                };
+
+                // On crée les bordures du JLabel
+                label.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 75)));
+
+                panel.add(label);
+            }
+        }
     }
 
     /**
@@ -114,6 +143,32 @@ public class Vue extends JFrame {
                 return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
             case ANGLE_BAS_GAUCHE:
                 return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
+            default:
+                return ImageIO.read(new File("sprites/blanc.png"));
+        }
+    }
+    
+    public BufferedImage getUrl(Case c) throws IOException {
+        if(c == null)
+            return ImageIO.read(new File("sprites/blanc.png"));
+
+        Tableau plateau = (Tableau) this.plateau;
+
+        switch (c.getType()) {
+            case CROIX:
+                return ImageIO.read(new File("sprites/croix_vide.png"));
+            case VERTICAL:
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
+            case HORIZONTAL:
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
+            case ANGLE_HAUT_DROITE:
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
+            case ANGLE_BAS_DROITE:
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
+            case ANGLE_HAUT_GAUCHE:
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
+            case ANGLE_BAS_GAUCHE:
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
             default:
                 return ImageIO.read(new File("sprites/blanc.png"));
         }

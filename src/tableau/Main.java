@@ -15,8 +15,8 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		Tableau plateau = new Tableau(10,10);
-		plateau.genererPlateau();
+		Tableau plateau = new Tableau(5,5);
+		plateau.genererPlateauCorrect();
 
 		long debut = System.currentTimeMillis();
 		ArrayList<ArrayList<Case>> cycles = plateau.getCycles();
