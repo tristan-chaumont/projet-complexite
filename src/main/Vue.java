@@ -25,7 +25,6 @@ public class Vue extends JFrame {
     public Vue(Plateau plateau) throws IOException {
         this.plateau = plateau;
         if(plateau instanceof Tableau) {
-        	((Tableau) plateau).genererPlateauCorrect();
         	cycle = ((Tableau) plateau).getMeilleurCycle(((Tableau)plateau).getCycles());
         }
         grid = new GridLayout(plateau.getHauteur(), plateau.getLargeur());
@@ -156,7 +155,7 @@ public class Vue extends JFrame {
 
         switch (c.getType()) {
             case CROIX:
-                return ImageIO.read(new File("sprites/croix_vide.png"));
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/croix_pleine.png" : "sprites/croix_vide.png"));
             case VERTICAL:
                 return ImageIO.read(new File(cycle.contains(c) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
             case HORIZONTAL:

@@ -7,29 +7,41 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Classe Plateau
+ * Classe Tableau
  * Represente le plateau
  */
 public class Tableau extends Plateau {
 	
 	/**
-	 * Attributs :
-	 * cases
-	 * 		tableau multidimentionnels de cases permettant de représenter le plateau
+	 * 	Tableau multidimentionnels de cases permettant de représenter le plateau
 	 */
     private Case[][] cases;
+    
+    /**
+     * Constructeur
+     * @param hauteur
+     * 			hauteur du tableau
+     * @param largeur
+     * 			largeur du tableau
+     * @param random
+     * 			tableau random ou correct
+     */
 
-    public Tableau(int hauteur, int largeur) {
+    public Tableau(int hauteur, int largeur, boolean random) {
     	super(hauteur, largeur);
     	cases = new Case[hauteur][largeur];
+    	if(random)
+    		this.genererTableau();
+    	else
+    		this.genererTableauCorrect();
     }
     
     /**
-     * Methode genererPlateau
-     * Permet de generer un plateau aleatoirement
+     * Methode genererTableau
+     * Permet de generer un tableau aleatoirement
      */
 
-	public void genererPlateau() {
+	public void genererTableau() {
     	for(int i = 0; i < hauteur; i++) {
     		for(int j = 0; j < largeur; j++) {
     			int random = (int)(Math.random() * 8);
@@ -69,11 +81,11 @@ public class Tableau extends Plateau {
     }
 	
 	/**
-	 * Méthode genererPlateauCorrect
-	 * Permet de générer un plateau avec des cycles correct
+	 * Méthode genererTableauCorrect
+	 * Permet de générer un tableau avec des cycles correct
 	 */
 	
-	public void genererPlateauCorrect() {
+	public void genererTableauCorrect() {
 			cases[0][0] = new Case(Type.ANGLE_BAS_DROITE);
 			cases[0][1] = new Case(Type.ANGLE_BAS_GAUCHE);
 			cases[0][2] = new Case(Type.BLANC);
@@ -95,14 +107,14 @@ public class Tableau extends Plateau {
 			cases[3][0] = new Case(Type.BLANC);
 			cases[3][1] = new Case(Type.BLANC);
 			cases[3][2] = new Case(Type.VERTICAL);
-			cases[3][3] = new Case(Type.ANGLE_HAUT_GAUCHE);
-			cases[3][4] = new Case(Type.BLANC);
+			cases[3][3] = new Case(Type.ANGLE_HAUT_DROITE);
+			cases[3][4] = new Case(Type.ANGLE_BAS_GAUCHE);
 			
 			cases[4][0] = new Case(Type.BLANC);
 			cases[4][1] = new Case(Type.BLANC);
 			cases[4][2] = new Case(Type.ANGLE_HAUT_DROITE);
 			cases[4][3] = new Case(Type.HORIZONTAL);
-			cases[4][4] = new Case(Type.BLANC);
+			cases[4][4] = new Case(Type.ANGLE_HAUT_GAUCHE);
 	}
 
 	/**
@@ -129,25 +141,25 @@ public class Tableau extends Plateau {
     				
     				while(continu) {
     					//System.out.println("(" +i +";" +j +")");
-    					if((j < largeur-1) && (cases[i][j].caseCorrect(cases[i][j+1], last)) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
+    					if((j < largeur-1) && (cases[i][j].caseCorrect(cases[i][j+1], last, "Droite")) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
     						cases[i][j+1].setCaseCompte();
     						j++;
     						last = "Droite";
     						
     						listCases.add(cases[i][j]);
-    					}else if((i < hauteur-1) && (cases[i][j].caseCorrect(cases[i+1][j], last)) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
+    					}else if((i < hauteur-1) && (cases[i][j].caseCorrect(cases[i+1][j], last, "Bas")) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
     						cases[i+1][j].setCaseCompte();
     						i++;
     						last = "Bas";
     						
     						listCases.add(cases[i][j]);
-    					}else if((j > 0) && (cases[i][j].caseCorrect(cases[i][j-1], last)) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
+    					}else if((j > 0) && (cases[i][j].caseCorrect(cases[i][j-1], last, "Gauche")) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
     						cases[i][j-1].setCaseCompte();
 							j--;
 							last = "Gauche";
 							
 							listCases.add(cases[i][j]);
-    					}else if((i > 0) && (cases[i][j].caseCorrect(cases[i-1][j], last)) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
+    					}else if((i > 0) && (cases[i][j].caseCorrect(cases[i-1][j], last, "Haut")) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
     						cases[i-1][j].setCaseCompte();
     						i--;
     						last = "Haut";
@@ -155,6 +167,8 @@ public class Tableau extends Plateau {
     						listCases.add(cases[i][j]);
     					}else {
     						continu = false;
+    						i = 0; j = 0;
+    						listCases = new ArrayList<Case>();
     					}
     					
     					if(cases[i][j] == start) {
@@ -166,7 +180,6 @@ public class Tableau extends Plateau {
     			}
     		}
     	}
-    	System.out.println(listCycles);
     	return listCycles;
     }
     
@@ -179,26 +192,33 @@ public class Tableau extends Plateau {
      */
     
     public ArrayList<Case> getMeilleurCycle(ArrayList<ArrayList<Case>> liste) {
-    	ArrayList<Case> listCases = liste.get(0);
-    	for(int i = 1; i < liste.size(); i++) {
-    		if(liste.get(i).size() > listCases.size()) {
-    			listCases = liste.get(i);
-    		}
+    	if(!liste.isEmpty()) {
+    		ArrayList<Case> listCases = liste.get(0);
+        	for(int i = 1; i < liste.size(); i++) {
+        		if(liste.get(i).size() > listCases.size()) {
+        			listCases = liste.get(i);
+        		}
+        	}
+        	
+        	return listCases;
     	}
-    	
-    	return listCases;
+    	return new ArrayList<Case>();
     }
     
     /**
      * Methode toString
-     * ! Methode a supprimer !
+     * @return
+     * 			le tableau avec les types des cases
      */
     
     public String toString() {
     	String res = "";
-    	for(int i = 0; i < cases.length; i++) {
-    		for(int j = 0; j < cases.length; j++) {
+    	for(int i = 0; i < hauteur; i++) {
+    		for(int j = 0; j < largeur; j++) {
     			res += cases[i][j].toString();
+    			if(j != largeur-1) {
+    				res += ", ";
+    			}
     		}
     		res += "\n";
     	}
@@ -214,6 +234,10 @@ public class Tableau extends Plateau {
     	return cases[i][j];
     }
     
+    public void setCase(int i, int j, Case c) {
+    	this.cases[i][j] = c;
+    }
+    
     public Case[][] getCases() {
 		return cases;
 	}
@@ -222,6 +246,9 @@ public class Tableau extends Plateau {
 		this.cases = cases;
 	}
 	
+	public void setHauteur(int h) {
+		this.hauteur = h;
+	}
 	
 	public int getHauteur() {
 		return hauteur;
@@ -229,10 +256,6 @@ public class Tableau extends Plateau {
 	
 	public int getLargeur() {
 		return largeur;
-	}
-
-	public void setHauteur(int h) {
-		this.hauteur = h;
 	}
 	
 	public void setLargeur(int l) {
