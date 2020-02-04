@@ -89,20 +89,20 @@ public class Tableau extends Plateau {
 			cases[2][0] = new Case(Type.BLANC);
 			cases[2][1] = new Case(Type.BLANC);
 			cases[2][2] = new Case(Type.ANGLE_BAS_DROITE);
-			cases[2][3] = new Case(Type.HORIZONTAL);
-			cases[2][4] = new Case(Type.ANGLE_BAS_GAUCHE);
+			cases[2][3] = new Case(Type.ANGLE_BAS_GAUCHE);
+			cases[2][4] = new Case(Type.BLANC);
 
 			cases[3][0] = new Case(Type.BLANC);
 			cases[3][1] = new Case(Type.BLANC);
 			cases[3][2] = new Case(Type.VERTICAL);
-			cases[3][3] = new Case(Type.BLANC);
-			cases[3][4] = new Case(Type.VERTICAL);
+			cases[3][3] = new Case(Type.ANGLE_HAUT_GAUCHE);
+			cases[3][4] = new Case(Type.BLANC);
 			
 			cases[4][0] = new Case(Type.BLANC);
 			cases[4][1] = new Case(Type.BLANC);
 			cases[4][2] = new Case(Type.ANGLE_HAUT_DROITE);
 			cases[4][3] = new Case(Type.HORIZONTAL);
-			cases[4][4] = new Case(Type.ANGLE_HAUT_GAUCHE);
+			cases[4][4] = new Case(Type.BLANC);
 	}
 
 	/**

@@ -32,6 +32,7 @@ public class Case {
      * 				vrai si les deux cases sont liees, faux sinon
      */
     
+    /** FAIRE AUSSI SELON LA DIRECTION (Gauche, Droite, Haut, Bas)**/
     public boolean caseCorrect(Case suivante, String last) {
     	boolean res = false;
     	if(suivante.getType() != Type.BLANC) {
