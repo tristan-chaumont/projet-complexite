@@ -23,6 +23,7 @@ public class Vue extends JFrame {
     private ArrayList<Case> cycle;
 
     public Vue(Plateau plateau) throws IOException {
+    	long debut = System.currentTimeMillis();
         this.plateau = plateau;
         if(plateau instanceof Tableau) {
         	cycle = ((Tableau) plateau).getMeilleurCycle(((Tableau)plateau).getCycles());
@@ -39,6 +40,8 @@ public class Vue extends JFrame {
         pack();
         //setMinimumSize(getPreferredSize());
         setVisible(true);
+        long fin = System.currentTimeMillis();
+        System.out.println("Le programme a mis " +((fin - debut)) +"ms pour éxécuter cette tâche");
     }
 
     public void setPlateauSize() {

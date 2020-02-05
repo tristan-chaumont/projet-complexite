@@ -26,56 +26,93 @@ public class Case {
      * Permet de comparer la case actuelle avec la case suivante afin de determiner si elles sont liees ou non
      * @param suivante
      * 				case suivante
-     * @param last
-     * 				dernier mouvement fait lors du parcours du plateau
      * @param direction
      * 				direction vers laquelle l'algorithme se déplace
      * @return
      * 				vrai si les deux cases sont liees, faux sinon
      */
     
-    public boolean caseCorrect(Case suivante, String last, String direction) {
+    public boolean caseCorrect(Case suivante, String direction) {
     	boolean res = false;
+    	
     	if(suivante.getType() != Type.BLANC) {
 	    	if(this.type == Type.CROIX) {
-	    		if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
-	    			res = true;
-	    		}
-	    	}else if(this.type == Type.VERTICAL) {
-	    		if((last == "Haut" || last == "Gauche") && (direction == "Haut")) {
+	    		if(direction == "Haut") {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
 		    		}
-	    		}else if((last == "Bas" || last == "Droite") && (direction == "Bas")) {
+	    		}else if(direction == "Bas") {
+	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
+		    			res = true;
+		    		}
+	    		}else if(direction == "Gauche") {
+	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
+		    			res = true;
+		    		}
+	    		}else if(direction == "Droite") {
+	    			if(suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
+		    			res = true;
+		    		}
+	    		}
+	    	}else if(this.type == Type.VERTICAL) {
+	    		if(direction == "Haut") {
+	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
+		    			res = true;
+		    		}
+	    		}else if(direction == "Bas") {
 	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
 		    		}
 	    		}
 	    	}else if(this.type == Type.HORIZONTAL) {
-	    		if((last == "Bas" || last == "Gauche") && (direction == "Gauche")) {
+	    		if(direction == "Gauche") {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 		    			res = true;
 		    		}
-	    		}else if((last == "Haut" || last == "Droite") && (direction == "Droite")) {
+	    		}else if(direction == "Droite") {
 	    			if(suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 		    			res = true;
 		    		}
 	    		}
 	    	}else if(this.type == Type.ANGLE_BAS_DROITE) {
-	    		if(suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || (suivante.getType() == Type.HORIZONTAL && direction == "Droite")) {
-	    			res = true;
+	    		if(direction == "Droite") {
+	    			if(suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || (suivante.getType() == Type.HORIZONTAL)) {
+		    			res = true;
+		    		}
+	    		}else if(direction == "Bas") {
+	    			if(suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.CROIX || (suivante.getType() == Type.VERTICAL)) {
+		    			res = true;
+		    		}
 	    		}
 	    	}else if(this.type == Type.ANGLE_BAS_GAUCHE) {
-	    		if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || (suivante.getType() == Type.VERTICAL && direction == "Bas")) {
-	    			res = true;
+	    		if(direction == "Gauche") {
+	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
+		    			res = true;
+		    		}
+	    		}else if(direction == "Bas") {
+	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
+		    			res = true;
+		    		}
 	    		}
 	    	}else if(this.type == Type.ANGLE_HAUT_DROITE) {
-	    		if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || (suivante.getType() == Type.VERTICAL && direction == "Haut")) {
-	    			res = true;
+	    		if(direction == "Droite") {
+	    			if(suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
+		    			res = true;
+		    		}
+	    		}else if(direction == "Haut") {
+	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
+		    			res = true;
+		    		}
 	    		}
 	    	}else if(this.type == Type.ANGLE_HAUT_GAUCHE) {
-	    		if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.CROIX || (suivante.getType() == Type.HORIZONTAL && direction == "Gauche")) {
-	    			res = true;
+	    		if(direction == "Gauche") {
+	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
+		    			res = true;
+		    		}
+	    		}else if(direction == "Haut") {
+	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
+		    			res = true;
+		    		}
 	    		}
 	    	}
     	}

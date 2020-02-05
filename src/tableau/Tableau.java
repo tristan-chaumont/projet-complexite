@@ -107,13 +107,13 @@ public class Tableau extends Plateau {
 			cases[3][0] = new Case(Type.BLANC);
 			cases[3][1] = new Case(Type.BLANC);
 			cases[3][2] = new Case(Type.VERTICAL);
-			cases[3][3] = new Case(Type.ANGLE_HAUT_DROITE);
+			cases[3][3] = new Case(Type.CROIX);
 			cases[3][4] = new Case(Type.ANGLE_BAS_GAUCHE);
 			
 			cases[4][0] = new Case(Type.BLANC);
 			cases[4][1] = new Case(Type.BLANC);
 			cases[4][2] = new Case(Type.ANGLE_HAUT_DROITE);
-			cases[4][3] = new Case(Type.HORIZONTAL);
+			cases[4][3] = new Case(Type.CROIX);
 			cases[4][4] = new Case(Type.ANGLE_HAUT_GAUCHE);
 	}
 
@@ -130,6 +130,7 @@ public class Tableau extends Plateau {
     	
     	Case start;
     	boolean continu = false;
+    	boolean estPasse = false;
     	String last = "";
     	
     	for(int i = 0; i < hauteur; i++) {
@@ -140,35 +141,51 @@ public class Tableau extends Plateau {
     				cases[i][j].setCaseCompte();
     				
     				while(continu) {
-    					//System.out.println("(" +i +";" +j +")");
-    					if((j < largeur-1) && (cases[i][j].caseCorrect(cases[i][j+1], last, "Droite")) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
+    					estPasse = false;
+    					System.out.println("(" +i +";" +j +")");
+    					
+    					if((j < largeur-1) && (cases[i][j].caseCorrect(cases[i][j+1], "Droite")) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
     						cases[i][j+1].setCaseCompte();
     						j++;
     						last = "Droite";
     						
     						listCases.add(cases[i][j]);
-    					}else if((i < hauteur-1) && (cases[i][j].caseCorrect(cases[i+1][j], last, "Bas")) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
+    						estPasse = true;
+    					}
+    					if((i < hauteur-1) && (cases[i][j].caseCorrect(cases[i+1][j], "Bas")) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
     						cases[i+1][j].setCaseCompte();
     						i++;
     						last = "Bas";
     						
     						listCases.add(cases[i][j]);
-    					}else if((j > 0) && (cases[i][j].caseCorrect(cases[i][j-1], last, "Gauche")) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
+    						estPasse = true;
+    					} 
+    					if((j > 0) && (cases[i][j].caseCorrect(cases[i][j-1], "Gauche")) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
     						cases[i][j-1].setCaseCompte();
 							j--;
 							last = "Gauche";
 							
 							listCases.add(cases[i][j]);
-    					}else if((i > 0) && (cases[i][j].caseCorrect(cases[i-1][j], last, "Haut")) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
+							estPasse = true;
+    					} 
+    					if((i > 0) && (cases[i][j].caseCorrect(cases[i-1][j], "Haut")) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
     						cases[i-1][j].setCaseCompte();
     						i--;
     						last = "Haut";
     						
     						listCases.add(cases[i][j]);
-    					}else {
+    						estPasse = true;
+    					}
+    					if(!estPasse) {
     						continu = false;
     						i = 0; j = 0;
-    						listCases = new ArrayList<Case>();
+    						ArrayList<Case> contains = this.containsCase(listCases);
+    						if(contains == null) {
+    							listCases = new ArrayList<Case>();
+    						}else {
+    							listCycles.add(listCases);
+        						listCases = new ArrayList<Case>();
+    						}
     					}
     					
     					if(cases[i][j] == start) {
@@ -203,6 +220,30 @@ public class Tableau extends Plateau {
         	return listCases;
     	}
     	return new ArrayList<Case>();
+    }
+    
+    public ArrayList<Case> containsCase(ArrayList<Case> liste){
+    	int index1 = 0;
+    	int index2 = 0;
+    	ArrayList<Case> res = new ArrayList<Case>();
+    	
+    	for(int i = 0; i < liste.size(); i++) {
+    		if(Collections.frequency(liste, liste.get(i)) > 1) {
+    			index1 = liste.indexOf(liste.get(i));
+    			index2 = liste.indexOf(liste.get(i));
+    		}
+    	}
+    	
+    	for(int j = index1; j < index2; j++) {
+    		res.add(liste.get(j));
+    	}
+    	
+    	if(index1 != 0 && index2 != 0) {
+    		return res;
+    	}else {
+    		return null;
+    	}
+    	
     }
     
     /**

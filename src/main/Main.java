@@ -10,7 +10,7 @@ public class Main {
         //Vue vue = new Vue(Global.genererGraphePrefait());
         try {
             //Vue vue = new Vue(Global.genererGrapheAleatoire());
-        	Vue vue = new Vue(new Tableau(5, 5, false));
+        	Vue vue = new Vue(new Tableau(10, 10, true));
         } catch (IOException e) {
             e.printStackTrace();
         }
