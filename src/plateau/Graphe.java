@@ -23,6 +23,12 @@ public class Graphe extends Plateau {
         pre = new ArrayList<>();
     }
 
+    public Graphe() {
+        super(0, 0);
+        sommets = new ArrayList<>();
+        pre = new ArrayList<>();
+    }
+
     /**
      * Méthode helper qui détecte s'il existe un sous-graphe qui peut être atteint depuis le Sommet "sommet".
      * @param sommet

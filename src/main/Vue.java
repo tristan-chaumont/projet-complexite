@@ -25,9 +25,10 @@ public class Vue extends JFrame {
     public Vue(Plateau plateau) throws IOException {
         this.plateau = plateau;
         long debut = System.currentTimeMillis();
-        if(plateau instanceof Tableau) {
+        if(plateau instanceof Tableau)
         	cycle = ((Tableau) plateau).getMeilleurCycle(((Tableau)plateau).getCycles());
-        }
+        else
+            ((Graphe) plateau).contientCycle();
         long fin = System.currentTimeMillis();
         grid = new GridLayout(plateau.getHauteur(), plateau.getLargeur());
         panel = new JPanel();
