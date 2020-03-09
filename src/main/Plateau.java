@@ -4,6 +4,13 @@ public abstract class Plateau {
 
     protected int hauteur, largeur;
 
+    /**
+     * Construit un plateau de taille largeur x hauteur
+     * @param hauteur
+     *      hauteur du plateau
+     * @param largeur
+     *      largeur du plateau
+     */
     public Plateau(int hauteur, int largeur) {
         this.hauteur = hauteur;
         this.largeur = largeur;
