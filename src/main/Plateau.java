@@ -2,7 +2,8 @@ package main;
 
 public abstract class Plateau {
 
-    protected int hauteur, largeur;
+    protected static int hauteur;
+	protected static int largeur;
 
     public Plateau(int hauteur, int largeur) {
         this.hauteur = hauteur;
