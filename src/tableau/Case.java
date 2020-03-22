@@ -4,18 +4,24 @@ import main.Global.Type;
 
 /**
  * Classe Case
- * Represente une case du tableau
+ * ReprÃ©sente une case du tableau
  */
-
 public class Case {
 
 	/**
-	 * Boolï¿½en permettant de savoir si la case a ï¿½tï¿½ comptï¿½e
+	 * Booleen permettant de savoir si la case a ï¿½tï¿½ comptï¿½e
 	 */
-	boolean compte;
-
+	private boolean compte;
+	/**
+	 * Type de la case
+	 */
     private Type type;
 
+    /**
+     * Constructeur
+     * @param t
+     * 			Type de la case
+     */
     public Case(Type t) {
         type = t;
         compte = false;
@@ -27,15 +33,14 @@ public class Case {
      * @param suivante
      * 				case suivante
      * @param direction
-     * 				direction vers laquelle l'algorithme se déplace
+     * 				direction vers laquelle l'algorithme se dï¿½place
      * @return
      * 				vrai si les deux cases sont liees, faux sinon
      */
-    
-    public boolean caseCorrect(Case suivante, String direction) {
+    public boolean caseCorrect(Case suivante, Case start, String direction) {
     	boolean res = false;
     	
-    	if(suivante.getType() != Type.BLANC) {
+    	if(suivante.getType() != Type.BLANC && ((!suivante.estCompte()) || (suivante.estCompte() && suivante == start))) {
 	    	if(this.type == Type.CROIX) {
 	    		if(direction == "Haut") {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
@@ -118,16 +123,6 @@ public class Case {
     	}
     	
     	return res;
-    }
-    
-    /**
-     * Methode toString
-     * @return
-     * 			le type de la case
-     */
-    
-    public String toString() {
-    	return this.type.toString();
     }
     
     /*************************/

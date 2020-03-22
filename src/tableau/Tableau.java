@@ -8,14 +8,26 @@ import java.util.Collections;
 
 /**
  * Classe Tableau
- * Represente le plateau
+ * Représente le plateau
  */
 public class Tableau extends Plateau {
 	
 	/**
 	 * 	Tableau multidimentionnels de cases permettant de représenter le plateau
 	 */
-    private Case[][] cases;
+	private static Case[][] cases;
+	/**
+	 * Case de départ d'un cycle
+	 */
+	private static Case start;
+	/**
+	 * Liste de cases constituant un cycle
+	 */
+	private static ArrayList<Case> listeCases = new ArrayList<Case>();
+	/**
+	 * Liste de cycle trouvés
+	 */
+	private static ArrayList<ArrayList<Case>> listeCycle = new ArrayList<ArrayList<Case>>();
     
     /**
      * Constructeur
@@ -24,9 +36,8 @@ public class Tableau extends Plateau {
      * @param largeur
      * 			largeur du tableau
      * @param random
-     * 			tableau random ou correct
+     * 			tableau random ou préfait
      */
-
     public Tableau(int hauteur, int largeur, boolean random) {
     	super(hauteur, largeur);
     	cases = new Case[hauteur][largeur];
@@ -40,7 +51,6 @@ public class Tableau extends Plateau {
      * Methode genererTableau
      * Permet de generer un tableau aleatoirement
      */
-
 	public void genererTableau() {
     	for(int i = 0; i < hauteur; i++) {
     		for(int j = 0; j < largeur; j++) {
@@ -84,7 +94,6 @@ public class Tableau extends Plateau {
 	 * Méthode genererTableauCorrect
 	 * Permet de générer un tableau avec des cycles correct
 	 */
-	
 	public void genererTableauCorrect() {
 			cases[0][0] = new Case(Type.ANGLE_BAS_DROITE);
 			cases[0][1] = new Case(Type.ANGLE_BAS_GAUCHE);
@@ -122,15 +131,15 @@ public class Tableau extends Plateau {
 	 * Permet d'obtenir la liste des différents cycles trouvés
 	 * @return
 	 * 			la liste des cycles trouvés
+	 * @throws Exception 
 	 */
-    
-    public ArrayList<ArrayList<Case>> getCycles() {
+    /*
+    public ArrayList<ArrayList<Case>> getCycles() throws Exception {
     	ArrayList<ArrayList<Case>> listCycles = new ArrayList<ArrayList<Case>>();
     	ArrayList<Case> listCases = new ArrayList<Case>();
     	
     	Case start;
     	boolean continu = false;
-    	boolean estPasse = false;
     	String last = "";
     	
     	for(int i = 0; i < hauteur; i++) {
@@ -141,42 +150,32 @@ public class Tableau extends Plateau {
     				cases[i][j].setCaseCompte();
     				
     				while(continu) {
-    					estPasse = false;
-    					System.out.println("(" +i +";" +j +")");
-    					
+    					//System.out.println("(" +i +";" +j +")");
     					if((j < largeur-1) && (cases[i][j].caseCorrect(cases[i][j+1], "Droite")) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
     						cases[i][j+1].setCaseCompte();
     						j++;
     						last = "Droite";
     						
     						listCases.add(cases[i][j]);
-    						estPasse = true;
-    					}
-    					if((i < hauteur-1) && (cases[i][j].caseCorrect(cases[i+1][j], "Bas")) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
+    					}else if((i < hauteur-1) && (cases[i][j].caseCorrect(cases[i+1][j], "Bas")) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
     						cases[i+1][j].setCaseCompte();
     						i++;
     						last = "Bas";
     						
     						listCases.add(cases[i][j]);
-    						estPasse = true;
-    					} 
-    					if((j > 0) && (cases[i][j].caseCorrect(cases[i][j-1], "Gauche")) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
+    					}else if((j > 0) && (cases[i][j].caseCorrect(cases[i][j-1], "Gauche")) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
     						cases[i][j-1].setCaseCompte();
 							j--;
 							last = "Gauche";
 							
 							listCases.add(cases[i][j]);
-							estPasse = true;
-    					} 
-    					if((i > 0) && (cases[i][j].caseCorrect(cases[i-1][j], "Haut")) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
+    					}else if((i > 0) && (cases[i][j].caseCorrect(cases[i-1][j], "Haut")) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
     						cases[i-1][j].setCaseCompte();
     						i--;
     						last = "Haut";
     						
     						listCases.add(cases[i][j]);
-    						estPasse = true;
-    					}
-    					if(!estPasse) {
+    					}else {
     						continu = false;
     						i = 0; j = 0;
     						ArrayList<Case> contains = this.containsCase(listCases);
@@ -188,7 +187,8 @@ public class Tableau extends Plateau {
     						}
     					}
     					
-    					if(cases[i][j] == start) {
+    					if((cases[i][j] == start) && (listCases.size() >= 4)) {
+    						System.out.println(listCases);
     						listCycles.add(listCases);
     						listCases = new ArrayList<Case>();
     						continu = false;
@@ -198,22 +198,100 @@ public class Tableau extends Plateau {
     		}
     	}
     	return listCycles;
-    }
+    }*/
+    
+	/**
+	 * Methodé backtrack
+	 * Permet de trouver les cycles
+	 * @param prec
+	 * 			Case précédente
+	 * @param i
+	 * 			Index ligne
+	 * @param j
+	 * 			Index colonne
+	 * @param affect
+	 * 			Boolean permettant de savoir si la case de départ vient d'être affectée
+	 * @return
+	 * 			Boolean
+	 */
+    public static boolean backtrack(Case prec, int i, int j, boolean affect) {
+		boolean estPasse = false;
+		
+		//Si la case de début n'est pas initialisée
+		//-> On l'initialise et on la marque
+		if(start == null) {
+			start = cases[i][j];
+			start.setCaseCompte();
+			affect = true;
+		}
+		
+		//Si la case actuel est la case de début, qu'elle ne vient pas d'être affectée 
+		//-> On ajoute le cycle, puis on recommance
+		if(cases[i][j] == start && !affect && listeCases.size() >= 4) {
+			listeCycle.add(listeCases);
+			
+			listeCases = new ArrayList<Case>();
+			start = getFirstNonMarque();
+			cases[i][j].setCaseCompte();
+			
+			ArrayList<Integer> indexes = getIndexes(start);
+			
+			if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), true)) {
+				return true;
+			}
+		}
+		
+		//On prend les possibilites de la case actuel
+		//Pour chaque case adjacente
+		//-> Si celle-ci n'est pas déjà comptée ou que c'est la case de début
+		//	 -> On ajoute la case, on la marque et on indique qu'on a trouvé une case correct, puis on recommence
+		ArrayList<Case> possibilites = getNumConnexions(start, prec, i, j);
+		System.out.println(possibilites);
+		for(int k = 0; k < possibilites.size(); k++) {
+			if(possibilites.get(k) != null) {
+				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start)) {
+					listeCases.add(possibilites.get(k));
+					possibilites.get(k).setCaseCompte();
+					estPasse = true;
+					ArrayList<Integer> indexes = getIndexes(possibilites.get(k));
+					
+					if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), false)) {
+						return true;
+					}
+				}
+			}
+		}
+
+		//Si on n'est pas passé dans la boucle ci-dessus
+		//-> On recommance avec une nouvelle case de départ, s'il ne reste plus de case, on arrête
+		if(!estPasse) {
+			listeCases = new ArrayList<Case>();
+			start = getFirstNonMarque();
+			
+			if(start != null) {
+				start.setCaseCompte();
+				ArrayList<Integer> indexes = getIndexes(start);
+				
+				if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), true)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
     
     /**
      * Methode getMeilleurCycle
-     * @param liste
-     * 			liste de cycles
      * @return
      * 			le meilleur cycle
      */
-    
-    public ArrayList<Case> getMeilleurCycle(ArrayList<ArrayList<Case>> liste) {
-    	if(!liste.isEmpty()) {
-    		ArrayList<Case> listCases = liste.get(0);
-        	for(int i = 1; i < liste.size(); i++) {
-        		if(liste.get(i).size() > listCases.size()) {
-        			listCases = liste.get(i);
+    public ArrayList<Case> getMeilleurCycle() {
+    	if(!listeCycle.isEmpty()) {
+    		ArrayList<Case> listCases = listeCycle.get(0);
+        	for(int i = 1; i < listeCycle.size(); i++) {
+        		if(listeCycle.get(i).size() > listCases.size()) {
+        			listCases = listeCycle.get(i);
         		}
         	}
         	
@@ -222,47 +300,69 @@ public class Tableau extends Plateau {
     	return new ArrayList<Case>();
     }
     
-    public ArrayList<Case> containsCase(ArrayList<Case> liste){
-    	int index1 = 0;
-    	int index2 = 0;
-    	ArrayList<Case> res = new ArrayList<Case>();
-    	
-    	for(int i = 0; i < liste.size(); i++) {
-    		if(Collections.frequency(liste, liste.get(i)) > 1) {
-    			index1 = liste.indexOf(liste.get(i));
-    			index2 = liste.indexOf(liste.get(i));
-    		}
-    	}
-    	
-    	for(int j = index1; j < index2; j++) {
-    		res.add(liste.get(j));
-    	}
-    	
-    	if(index1 != 0 && index2 != 0) {
-    		return res;
-    	}else {
-    		return null;
-    	}
-    	
-    }
-    
     /**
-     * Methode toString
-     * @return
-     * 			le tableau avec les types des cases
-     */
-    
-    public String toString() {
-    	String res = "";
-    	for(int i = 0; i < hauteur; i++) {
-    		for(int j = 0; j < largeur; j++) {
-    			res += cases[i][j].toString();
-    			if(j != largeur-1) {
-    				res += ", ";
-    			}
-    		}
-    		res += "\n";
-    	}
+	 * Méthode permettant d'avoir les indexes de la case c
+	 * @param c
+	 * 			Case
+	 * @return
+	 * 			La liste des indexes (hauteur,largeur)
+	 */
+	public static ArrayList<Integer> getIndexes(Case c){
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		for(int i = 0; i < hauteur; i++) {
+			for(int j = 0; j < largeur; j++) {
+				if(cases[i][j] == c) {
+					res.add(i);
+					res.add(j);
+				}
+			}
+		}
+		return res;
+	}
+	
+	/**
+	 * Methode permettant d'obtenir la première case non marquée du plateau
+	 * @return
+	 * 			La première case non marquée
+	 */
+	public static Case getFirstNonMarque() {
+		for(int i = 0; i < hauteur; i++) {
+			for(int j = 0; j < largeur; j++) {
+				if(!cases[i][j].estCompte()) {
+					return cases[i][j];
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Methode permettant d'obtenir le nombres de connexions d'une case
+	 * @param i
+	 * 			Index hauteur
+	 * @param j
+	 * 			Index largeur
+	 * @return
+	 * 			La liste de case adjacente
+	 */
+	public static ArrayList<Case> getNumConnexions(Case start, Case prec, int i, int j) {
+    	ArrayList<Case> res = new ArrayList<Case>();
+		if((j < largeur-1) && cases[i][j].caseCorrect(cases[i][j+1], start, "Droite") && cases[i][j+1] != prec) {
+			res.add(cases[i][j+1]);
+		}
+		if((i < hauteur-1) && cases[i][j].caseCorrect(cases[i+1][j], start, "Bas") && cases[i+1][j] != prec) {
+			res.add(cases[i+1][j]);
+		}
+		if((j > 0) && cases[i][j].caseCorrect(cases[i][j-1], start, "Gauche") && cases[i][j-1] != prec) {
+			res.add(cases[i][j-1]);
+		}
+		if(i > 0)
+			System.out.println(cases[i][j].caseCorrect(cases[i-1][j], start, "Haut"));
+		
+		if((i > 0) && cases[i][j].caseCorrect(cases[i-1][j], start, "Haut") && cases[i-1][j] != prec) {
+			res.add(cases[i-1][j]);
+		}
     	
     	return res;
     }
@@ -276,19 +376,19 @@ public class Tableau extends Plateau {
     }
     
     public void setCase(int i, int j, Case c) {
-    	this.cases[i][j] = c;
+    	cases[i][j] = c;
     }
     
     public Case[][] getCases() {
 		return cases;
 	}
 
-	public void setCases(Case[][] cases) {
-		this.cases = cases;
+	public void setCases(Case[][] c) {
+		cases = c;
 	}
 	
 	public void setHauteur(int h) {
-		this.hauteur = h;
+		hauteur = h;
 	}
 	
 	public int getHauteur() {
@@ -300,6 +400,30 @@ public class Tableau extends Plateau {
 	}
 	
 	public void setLargeur(int l) {
-		this.largeur = l;
+		largeur = l;
+	}
+
+	public static Case getStart() {
+		return start;
+	}
+
+	public static void setStart(Case s) {
+		start = s;
+	}
+
+	public static ArrayList<Case> getListeCases() {
+		return listeCases;
+	}
+
+	public static void setListeCases(ArrayList<Case> liste) {
+		listeCases = liste;
+	}
+
+	public static ArrayList<ArrayList<Case>> getListeCycle() {
+		return listeCycle;
+	}
+
+	public static void setListeCycle(ArrayList<ArrayList<Case>> listeCycle) {
+		Tableau.listeCycle = listeCycle;
 	}
 }

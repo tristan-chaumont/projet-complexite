@@ -22,12 +22,14 @@ public class Vue extends JFrame {
     
     private ArrayList<Case> cycle;
 
-    public Vue(Plateau plateau) throws IOException {
-    	long debut = System.currentTimeMillis();
+    public Vue(Plateau plateau) throws Exception {
         this.plateau = plateau;
+        long debut = System.currentTimeMillis();
         if(plateau instanceof Tableau) {
-        	cycle = ((Tableau) plateau).getMeilleurCycle(((Tableau)plateau).getCycles());
+        	Tableau.backtrack(null, 0, 0, false);
+        	cycle = ((Tableau) plateau).getMeilleurCycle();
         }
+        long fin = System.currentTimeMillis();
         grid = new GridLayout(plateau.getHauteur(), plateau.getLargeur());
         panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -40,7 +42,6 @@ public class Vue extends JFrame {
         pack();
         //setMinimumSize(getPreferredSize());
         setVisible(true);
-        long fin = System.currentTimeMillis();
         System.out.println("Le programme a mis " +((fin - debut)) +"ms pour éxécuter cette tâche");
     }
 
@@ -154,7 +155,7 @@ public class Vue extends JFrame {
         if(c == null)
             return ImageIO.read(new File("sprites/blanc.png"));
 
-        Tableau plateau = (Tableau) this.plateau;
+        Tableau plat = (Tableau) plateau;
 
         switch (c.getType()) {
             case CROIX:
