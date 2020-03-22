@@ -22,13 +22,16 @@ public class Vue extends JFrame {
     
     private ArrayList<Case> cycle;
 
-    public Vue(Plateau plateau) throws Exception {
+    public Vue(Plateau plateau) throws IOException {
         this.plateau = plateau;
         long debut = System.currentTimeMillis();
         if(plateau instanceof Tableau) {
         	Tableau.backtrack(null, 0, 0, false);
         	cycle = ((Tableau) plateau).getMeilleurCycle();
+        }else {
+        	((Graphe) plateau).contientCycle();
         }
+            
         long fin = System.currentTimeMillis();
         grid = new GridLayout(plateau.getHauteur(), plateau.getLargeur());
         panel = new JPanel();
@@ -60,17 +63,17 @@ public class Vue extends JFrame {
     }
 
     public void addImagesAndBorder() throws IOException {
-        if (plateau instanceof Graphe)
-            addImagesAndBorderGraphe();
-        else
-            addImagesAndBorderTableau();
-    }
-
-    private void addImagesAndBorderGraphe() throws IOException {
         for (int i = 0; i < plateau.getHauteur(); i++) {
             for (int j = 0; j < plateau.getLargeur(); j++) {
-                Sommet sommet = ((Graphe) plateau).getSommetDepuisCoordonnees(j, i);
-                BufferedImage sprite = getUrl(sommet);
+
+                Object caseConnect;
+
+                if (plateau instanceof Graphe)
+                    caseConnect = ((Graphe) plateau).getSommetDepuisCoordonnees(j, i);
+                else
+                    caseConnect = ((Tableau) plateau).getCase(i,j);
+
+                BufferedImage sprite = caseConnect instanceof Sommet ? getUrl((Sommet) caseConnect) : getUrl((Case) caseConnect);
 
                 // On crée un label contenant le sprite. Ce label peut être resizable.
                 JLabel label = new JLabel() {
@@ -83,32 +86,7 @@ public class Vue extends JFrame {
                     }
                 };
 
-                // On crée les bordures du JLabel
-                label.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 75)));
-
-                panel.add(label);
-            }
-        }
-    }
-
-    private void addImagesAndBorderTableau() throws IOException {
-    	for (int i = 0; i < plateau.getHauteur(); i++) {
-            for (int j = 0; j < plateau.getLargeur(); j++) {
-            	Case c = ((Tableau) plateau).getCase(i,j);
-                BufferedImage sprite = getUrl(c);
-
-                // On crée un label contenant le sprite. Ce label peut être resizable.
-                JLabel label = new JLabel() {
-                    @Override
-                    public void paintComponent(Graphics g) {
-                        super.paintComponent(g);
-                        g.drawImage(sprite, 0, 0, this.getWidth(), this.getHeight(), null);
-                        repaint();
-                        revalidate();
-                    }
-                };
-
-                // On crée les bordures du JLabel
+                // On cr�e les bordures du JLabel
                 label.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 75)));
 
                 panel.add(label);

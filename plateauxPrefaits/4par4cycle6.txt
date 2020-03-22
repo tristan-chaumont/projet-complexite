@@ -1,0 +1,7 @@
+6 7
+B B V B B B B
+B B V H B H B
+B AHD C C C ABG B
+B V ABG AHD C V B
+B AHD ABG C C C B
+B B B B B B B

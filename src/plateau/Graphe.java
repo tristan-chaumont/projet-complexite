@@ -17,10 +17,20 @@ public class Graphe extends Plateau {
 
     public ArrayList<Sommet> pre;
 
+    public Sommet finCycle;
+
     public Graphe(int hauteur, int largeur) {
         super(hauteur, largeur);
         sommets = new ArrayList<>();
         pre = new ArrayList<>();
+        finCycle = null;
+    }
+
+    public Graphe() {
+        super(0, 0);
+        sommets = new ArrayList<>();
+        pre = new ArrayList<>();
+        finCycle = null;
     }
 
     /**
@@ -34,7 +44,7 @@ public class Graphe extends Plateau {
      * @return
      *      true s'il existe un cycle, false sinon.
      */
-    private boolean contientCycleUtil(Sommet sommet, boolean[] visited, Sommet parent) {
+    private int contientCycleUtil(Sommet sommet, boolean[] visited, Sommet parent) {
         // Marque le sommet courant comme visité
         visited[sommets.indexOf(sommet)] = true;
 
@@ -42,18 +52,24 @@ public class Graphe extends Plateau {
         for (Sommet s : sommet.getAdjacents()) {
             // Si le noeud adjacent n'a pas été visité, alors on réexécute la méthode sur ce nouveau sommet
             if (!visited[sommets.indexOf(s)]) {
-                if (contientCycleUtil(s, visited, sommet)) {
+                int value = contientCycleUtil(s, visited, sommet);
+                if (sommet == finCycle) {
                     pre.add(s);
-                    return true;
-                }
+                    return 2;
+                } else if (value == 1) {
+                    pre.add(s);
+                    return 1;
+                } else if (value == 2)
+                    return 2;
 
             // Si le sommet adjacent a été visité et que ce n'est pas un parent du sommet actuel, alors il y a un cycle.
             } else if (!s.equals(parent)) {
+                finCycle = s;
                 pre.add(s);
-                return true;
+                return 1;
             }
         }
-        return false;
+        return 0;
     }
 
     /**
@@ -69,7 +85,7 @@ public class Graphe extends Plateau {
         for (int i = 0; i < visited.length; i++) {
             // On n'exécute pas la méthode helper si le chemin a déjà été visité.
             if (!visited[i])
-                if (contientCycleUtil(sommets.get(i), visited, null))
+                if (contientCycleUtil(sommets.get(i), visited, null) == 2)
                     return true;
         }
 

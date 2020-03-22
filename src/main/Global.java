@@ -3,6 +3,8 @@ package main;
 import plateau.Graphe;
 import plateau.Sommet;
 
+import java.io.*;
+
 /**
  * Classe globale qui regroupe toutes les informations qui sont partagées par la méthode du graphe et la méthode du tableau
  * @author Tristan
@@ -56,7 +58,7 @@ public class Global {
      * @return
      *      Le graphe en question.
      */
-    public static Graphe genererGraphePrefait() {
+    /*public static Graphe genererGraphePrefait() {
         Graphe graphe = new Graphe(5, 5);
         /*
         Graphe :
@@ -69,7 +71,7 @@ public class Global {
                    |
                    |
          */
-        graphe.addSommet(new Sommet(1, 0, Global.Type.ANGLE_BAS_DROITE));
+        /*graphe.addSommet(new Sommet(1, 0, Global.Type.ANGLE_BAS_DROITE));
         graphe.addSommet(new Sommet(2, 0, Global.Type.ANGLE_BAS_GAUCHE));
         graphe.addArc(graphe.sommets.get(0), graphe.sommets.get(1));
 
@@ -99,7 +101,9 @@ public class Global {
         graphe.addArc(graphe.sommets.get(8), graphe.sommets.get(9));
 
         return graphe;
-    }
+    }*/
+
+    //region GENERER GRAPHE ALEATOIRE
 
     /**
      * Génère un graphe aléatoire contenant au moins un cycle.
@@ -122,4 +126,67 @@ public class Global {
         } while(!g.contientCycle());
         return g;
     }
+
+    //endregion
+
+    //region CREER PLATEAU PARFAIT
+
+    public static Graphe genererGraphePrefait(String fileName) {
+        Graphe plateau = null;
+        try {
+            FileReader fileReader = new FileReader("plateauxPrefaits/" + fileName);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line = "";
+            int count = 0;
+            line = bufferedReader.readLine();
+            plateau = new Graphe(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] splitLine = line.split(" ");
+                for (int i = 0; i < splitLine.length; i++) {
+                    Sommet sommet = getSommet(splitLine[i], count, i);
+                    plateau.relierSommetsAdjacents(sommet);
+                    plateau.addSommet(sommet);
+                }
+                count++;
+            }
+            bufferedReader.close();
+            fileReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return plateau;
+    }
+
+    private static Sommet getSommet(String type, int i, int j) {
+        Sommet sommet;
+        switch (type) {
+            case "AHD":
+                sommet = new Sommet(j, i, Type.ANGLE_HAUT_DROITE);
+                break;
+            case "AHG":
+                sommet = new Sommet(j, i, Type.ANGLE_HAUT_GAUCHE);
+                break;
+            case "ABG":
+                sommet = new Sommet(j, i, Type.ANGLE_BAS_GAUCHE);
+                break;
+            case "ABD":
+                sommet = new Sommet(j, i, Type.ANGLE_BAS_DROITE);
+                break;
+            case "H":
+                sommet = new Sommet(j, i, Type.HORIZONTAL);
+                break;
+            case "V":
+                sommet = new Sommet(j, i, Type.VERTICAL);
+                break;
+            case "C":
+                sommet = new Sommet(j, i, Type.CROIX);
+                break;
+            default:
+                sommet = new Sommet(j, i, Type.BLANC);
+                break;
+        }
+        return sommet;
+    }
+
+    //endregion
 }
