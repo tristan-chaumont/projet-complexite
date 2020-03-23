@@ -110,7 +110,7 @@ public class Global {
      * @return
      *      Le graphe aléatoire généré.
      */
-    public static Graphe genererGrapheAleatoire() {
+    /*public static Graphe genererGrapheAleatoire() {
         Graphe g;
         do {
             //g = new Graphe(50, 50);
@@ -125,7 +125,7 @@ public class Global {
             System.out.println("Ne contient pas de cycle.");
         } while(!g.contientCycle());
         return g;
-    }
+    }*/
 
     //endregion
 
@@ -143,7 +143,7 @@ public class Global {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] splitLine = line.split(" ");
                 for (int i = 0; i < splitLine.length; i++) {
-                    Sommet sommet = getSommet(splitLine[i], count, i);
+                    Sommet sommet = Sommet.getSommet(count, i, splitLine[i]);
                     plateau.relierSommetsAdjacents(sommet);
                     plateau.addSommet(sommet);
                 }
@@ -155,37 +155,6 @@ public class Global {
             e.printStackTrace();
         }
         return plateau;
-    }
-
-    private static Sommet getSommet(String type, int i, int j) {
-        Sommet sommet;
-        switch (type) {
-            case "AHD":
-                sommet = new Sommet(j, i, Type.ANGLE_HAUT_DROITE);
-                break;
-            case "AHG":
-                sommet = new Sommet(j, i, Type.ANGLE_HAUT_GAUCHE);
-                break;
-            case "ABG":
-                sommet = new Sommet(j, i, Type.ANGLE_BAS_GAUCHE);
-                break;
-            case "ABD":
-                sommet = new Sommet(j, i, Type.ANGLE_BAS_DROITE);
-                break;
-            case "H":
-                sommet = new Sommet(j, i, Type.HORIZONTAL);
-                break;
-            case "V":
-                sommet = new Sommet(j, i, Type.VERTICAL);
-                break;
-            case "C":
-                sommet = new Sommet(j, i, Type.CROIX);
-                break;
-            default:
-                sommet = new Sommet(j, i, Type.BLANC);
-                break;
-        }
-        return sommet;
     }
 
     //endregion

@@ -1,5 +1,7 @@
 package plateau;
 
+import main.Cellule;
+import main.Global;
 import main.Plateau;
 
 import java.util.ArrayList;
@@ -141,6 +143,38 @@ public class Graphe extends Plateau {
             return false;
 
         return from.getBranches()[branche] && to.getBranches()[branche > 1 ? branche - 2 : branche + 2];
+    }
+
+    @Override
+    public Cellule getSommet(int x, int y, String type) {
+        Sommet sommet;
+        switch (type) {
+            case "AHD":
+                sommet = new Sommet(y, x, Global.Type.ANGLE_HAUT_DROITE);
+                break;
+            case "AHG":
+                sommet = new Sommet(y, x, Global.Type.ANGLE_HAUT_GAUCHE);
+                break;
+            case "ABG":
+                sommet = new Sommet(y, x, Global.Type.ANGLE_BAS_GAUCHE);
+                break;
+            case "ABD":
+                sommet = new Sommet(y, x, Global.Type.ANGLE_BAS_DROITE);
+                break;
+            case "H":
+                sommet = new Sommet(y, x, Global.Type.HORIZONTAL);
+                break;
+            case "V":
+                sommet = new Sommet(y, x, Global.Type.VERTICAL);
+                break;
+            case "C":
+                sommet = new Sommet(y, x, Global.Type.CROIX);
+                break;
+            default:
+                sommet = new Sommet(y, x, Global.Type.BLANC);
+                break;
+        }
+        return sommet;
     }
 
     /**

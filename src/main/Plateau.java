@@ -17,6 +17,8 @@ public abstract class Plateau {
         this.largeur = largeur;
     }
 
+    public abstract Cellule getSommet(int x, int y , String type);
+
     public int getHauteur() {
         return hauteur;
     }

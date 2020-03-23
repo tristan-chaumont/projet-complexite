@@ -1,5 +1,6 @@
 package tableau;
 
+import main.Cellule;
 import main.Global.*;
 import main.Plateau;
 
@@ -366,6 +367,11 @@ public class Tableau extends Plateau {
     	
     	return res;
     }
+
+	@Override
+	public Cellule getSommet(int x, int y, String type) {
+		return null;
+	}
     
     /*************************/
    /****GETTERS & SETTERS****/
@@ -390,7 +396,7 @@ public class Tableau extends Plateau {
 	public void setHauteur(int h) {
 		hauteur = h;
 	}
-	
+
 	public int getHauteur() {
 		return hauteur;
 	}
