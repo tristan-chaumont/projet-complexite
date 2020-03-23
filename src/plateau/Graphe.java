@@ -8,6 +8,7 @@ import tableau.Tableau;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +25,8 @@ public class Graphe extends Plateau {
     public ArrayList<Sommet> pre;
 
     public Sommet finCycle;
+
+    public ArrayList<ArrayList<Sommet>> circuits;
 
     public Graphe(int hauteur, int largeur) {
         super(hauteur, largeur);
@@ -58,21 +61,32 @@ public class Graphe extends Plateau {
         for (Sommet s : sommet.getAdjacents()) {
             // Si le noeud adjacent n'a pas été visité, alors on réexécute la méthode sur ce nouveau sommet
             if (!visited[sommets.indexOf(s)]) {
+                // Récurrence, on récupère la valeur du cycle
                 int value = contientCycleUtil(s, visited, sommet);
                 if (sommet == finCycle) {
+                    // Si on tombe sur le sommet de départ, alors c'est un cycle.
+                    // On ajoute le sommet actuel dans la liste des prédécesseurs et on ajoute le cycle complet dans la liste des circuits.
+                    // On retourne 2 pour marquer la fin du cycle.
                     pre.add(s);
+                    circuits.add(pre);
                     return 2;
                 } else if (value == 1) {
+                    // On continue l'algorithme si on ne trouve rien.
+                    // On ajoute le sommet actuel dans la liste des prédécesseurs.
+                    // On retourne 1 pour marquer la poursuite de l'algo.
                     pre.add(s);
                     return 1;
                 } else if (value == 2)
+                    // On a déjà trouvé le cycle, donc on arrête l'algorithme.
                     return 2;
 
             // Si le sommet adjacent a été visité et que ce n'est pas un parent du sommet actuel, alors il y a un cycle.
             } else if (!s.equals(parent)) {
+                // On marque le sommet actuel comme fin de cycle.
+                // On l'ajoute dans la liste des prédecesseurs.
                 finCycle = s;
                 pre.add(s);
-                return 1;
+                return 2;
             }
         }
         return 0;
@@ -91,8 +105,10 @@ public class Graphe extends Plateau {
         for (int i = 0; i < visited.length; i++) {
             // On n'exécute pas la méthode helper si le chemin a déjà été visité.
             if (!visited[i])
-                if (contientCycleUtil(sommets.get(i), visited, null) == 2)
+                if (contientCycleUtil(sommets.get(i), visited, null) == 2) {
+                    //TODO Vérifier comment on fait continuer l'algo même après avoir trouvé un premier circuit.
                     return true;
+                }
         }
 
         return false;
@@ -204,5 +220,9 @@ public class Graphe extends Plateau {
 
     public ArrayList<Sommet> getPre() {
         return pre;
+    }
+
+    public ArrayList<ArrayList<Sommet>> getCircuits() {
+        return circuits;
     }
 }

@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class Vue extends JFrame {
@@ -30,6 +31,7 @@ public class Vue extends JFrame {
         	cycle = ((Tableau) plateau).getMeilleurCycle();
         }else {
         	((Graphe) plateau).contientCycle();
+            System.out.println(((Graphe)plateau).getCircuits().stream().mapToInt(ArrayList::size).max());
         }
             
         long fin = System.currentTimeMillis();
