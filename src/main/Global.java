@@ -2,6 +2,7 @@ package main;
 
 import plateau.Graphe;
 import plateau.Sommet;
+import tableau.Tableau;
 
 import java.io.*;
 
@@ -130,32 +131,6 @@ public class Global {
     //endregion
 
     //region CREER PLATEAU PARFAIT
-
-    public static Graphe genererGraphePrefait(String fileName) {
-        Graphe plateau = null;
-        try {
-            FileReader fileReader = new FileReader("plateauxPrefaits/" + fileName);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line = "";
-            int count = 0;
-            line = bufferedReader.readLine();
-            plateau = new Graphe(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] splitLine = line.split(" ");
-                for (int i = 0; i < splitLine.length; i++) {
-                    Sommet sommet = getSommet(splitLine[i], count, i);
-                    plateau.relierSommetsAdjacents(sommet);
-                    plateau.addSommet(sommet);
-                }
-                count++;
-            }
-            bufferedReader.close();
-            fileReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return plateau;
-    }
 
     private static Sommet getSommet(String type, int i, int j) {
         Sommet sommet;

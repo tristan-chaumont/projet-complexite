@@ -1,8 +1,13 @@
 package tableau;
 
 import main.Global.*;
+import plateau.Graphe;
+import plateau.Sommet;
 import main.Plateau;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -246,7 +251,6 @@ public class Tableau extends Plateau {
 		//-> Si celle-ci n'est pas déjà comptée ou que c'est la case de début
 		//	 -> On ajoute la case, on la marque et on indique qu'on a trouvé une case correct, puis on recommence
 		ArrayList<Case> possibilites = getNumConnexions(start, prec, i, j);
-		System.out.println(possibilites);
 		for(int k = 0; k < possibilites.size(); k++) {
 			if(possibilites.get(k) != null) {
 				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start)) {
@@ -357,14 +361,68 @@ public class Tableau extends Plateau {
 		if((j > 0) && cases[i][j].caseCorrect(cases[i][j-1], start, "Gauche") && cases[i][j-1] != prec) {
 			res.add(cases[i][j-1]);
 		}
-		if(i > 0)
-			System.out.println(cases[i][j].caseCorrect(cases[i-1][j], start, "Haut"));
-		
 		if((i > 0) && cases[i][j].caseCorrect(cases[i-1][j], start, "Haut") && cases[i-1][j] != prec) {
 			res.add(cases[i-1][j]);
 		}
     	
     	return res;
+    }
+	
+	private Case getCase(String type, int i, int j) {
+        Case c;
+        switch (type) {
+            case "AHD":
+                c = new Case(i, j, Type.ANGLE_HAUT_DROITE);
+                break;
+            case "AHG":
+                c = new Case(i, j, Type.ANGLE_HAUT_GAUCHE);
+                break;
+            case "ABG":
+                c = new Case(i, j, Type.ANGLE_BAS_GAUCHE);
+                break;
+            case "ABD":
+                c = new Case(i, j, Type.ANGLE_BAS_DROITE);
+                break;
+            case "H":
+                c = new Case(i, j, Type.HORIZONTAL);
+                break;
+            case "V":
+                c = new Case(i, j, Type.VERTICAL);
+                break;
+            case "C":
+                c = new Case(i, j, Type.CROIX);
+                break;
+            default:
+                c = new Case(i, j, Type.BLANC);
+                break;
+        }
+        return c;
+    }
+	
+	public Plateau genererPlateauPrefait(String fileName) {
+        Tableau plateau = null;
+        try {
+            FileReader fileReader = new FileReader("plateauxPrefaits/" + fileName);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line = "";
+            int count = 0;
+            line = bufferedReader.readLine();
+            plateau = new Tableau(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]), false);
+            
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] splitLine = line.split(" ");
+                for (int i = 0; i < splitLine.length; i++) {
+            		Case c = getCase(splitLine[i], count, i);
+            		plateau.setCase(count, i, c);
+                }
+                count++;
+            }
+            bufferedReader.close();
+            fileReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return plateau;
     }
     
     /*************************/

@@ -1,5 +1,7 @@
 package main;
 
+import plateau.Sommet;
+
 public abstract class Plateau {
 
     protected static int hauteur;
@@ -32,4 +34,6 @@ public abstract class Plateau {
     public void setHauteur(int hauteur) {
         this.hauteur = hauteur;
     }
+	
+	protected abstract Plateau genererPlateauPrefait(String fileName);
 }
