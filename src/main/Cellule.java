@@ -4,8 +4,8 @@ import main.Global.*;
 
 public abstract class Cellule {
 
-    int x, y;
-    Type type;
+    protected int x, y;
+    protected Type type;
 
     public Cellule(int abscisse, int ordonnee, Type type) {
         x = abscisse;

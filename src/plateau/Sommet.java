@@ -13,19 +13,9 @@ import java.util.Objects;
 public class Sommet extends Cellule {
 
     /**
-     * Coordonnées du sommet dans le graphe
-     */
-    private int x, y;
-
-    /**
      * Liste des sommets adjacents à celui-ci
      */
     private ArrayList<Sommet> adjacents;
-
-    /**
-     * Type du sommet (parmi les types du jeu Connect)
-     */
-    private Type type;
 
     /**
      * Tableau des branches du Sommet. Vaut true pour chaque branche qui existe sur ce sommet, sinon false.
@@ -96,18 +86,6 @@ public class Sommet extends Cellule {
 
     public void addAdjacent(Sommet adjacent) {
         adjacents.add(adjacent);
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public Type getType() {
-        return type;
     }
 
     public ArrayList<Sommet> getAdjacents() {
