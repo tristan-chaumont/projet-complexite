@@ -360,32 +360,6 @@ public class Tableau extends Plateau {
         }
         return c;
 	}
-	
-	public Plateau genererPlateauPrefait(String fileName) {
-        Tableau plateau = null;
-        try {
-            FileReader fileReader = new FileReader("plateauxPrefaits/" + fileName);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line = "";
-            int count = 0;
-            line = bufferedReader.readLine();
-            plateau = new Tableau(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
-            
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] splitLine = line.split(" ");
-                for (int i = 0; i < splitLine.length; i++) {
-            		Case c = (Case) getCellule(count, i, splitLine[i]);
-            		plateau.setCase(count, i, c);
-                }
-                count++;
-            }
-            bufferedReader.close();
-            fileReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return plateau;
-    }
     
     /*************************/
    /****GETTERS & SETTERS****/

@@ -36,6 +36,4 @@ public abstract class Plateau {
     public void setHauteur(int hauteur) {
         this.hauteur = hauteur;
     }
-	
-	protected abstract Plateau genererPlateauPrefait(String fileName);
 }

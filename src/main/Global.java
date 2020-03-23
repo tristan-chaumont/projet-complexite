@@ -2,6 +2,7 @@ package main;
 
 import plateau.Graphe;
 import plateau.Sommet;
+import tableau.Case;
 import tableau.Tableau;
 
 import java.io.*;
@@ -127,4 +128,39 @@ public class Global {
         } while(!g.contientCycle());
         return g;
     }*/
+
+    public static Plateau genererPlateauPrefait(String fileName, String classe) {
+        Plateau plateau = null;
+        try {
+            FileReader fileReader = new FileReader("plateauxPrefaits/" + fileName);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line = "";
+            int count = 0;
+            line = bufferedReader.readLine();
+            if(classe.equals("graphe")) {
+                plateau = new Graphe(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
+            } else {
+                plateau = new Tableau(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
+            }
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] splitLine = line.split(" ");
+                for (int i = 0; i < splitLine.length; i++) {
+                    if(classe.equals("graphe")) {
+                        Sommet sommet = (Sommet) plateau.getCellule(count, i, splitLine[i]);
+                        ((Graphe) plateau).relierSommetsAdjacents(sommet);
+                        ((Graphe) plateau).addSommet(sommet);
+                    } else {
+                        Case c = (Case) plateau.getCellule(count, i, splitLine[i]);
+                        ((Tableau) plateau).setCase(count, i, c);
+                    }
+                }
+                count++;
+            }
+            bufferedReader.close();
+            fileReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return plateau;
+    }
 }
