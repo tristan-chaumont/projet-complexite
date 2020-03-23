@@ -1,5 +1,7 @@
 package main;
 
+import plateau.Sommet;
+
 public abstract class Plateau {
 
     protected static int hauteur;
@@ -16,6 +18,8 @@ public abstract class Plateau {
         this.hauteur = hauteur;
         this.largeur = largeur;
     }
+
+    public abstract Cellule getCellule(int x, int y , String type);
 
     public int getHauteur() {
         return hauteur;

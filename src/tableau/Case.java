@@ -1,12 +1,13 @@
 package tableau;
 
+import main.Cellule;
 import main.Global.Type;
 
 /**
  * Classe Case
  * Représente une case du tableau
  */
-public class Case {
+public class Case extends Cellule {
 
 	/**
 	 * Booleen permettant de savoir si la case a �t� compt�e
@@ -19,11 +20,11 @@ public class Case {
 
     /**
      * Constructeur
-     * @param t
+     * @param type
      * 			Type de la case
      */
-    public Case(Type t) {
-        type = t;
+    public Case(int abscisse, int ordonnee, Type type) {
+    	super(abscisse, ordonnee, type);
         compte = false;
     }
     
@@ -42,69 +43,69 @@ public class Case {
     	
     	if(suivante.getType() != Type.BLANC && ((!suivante.estCompte()) || (suivante.estCompte() && suivante == start))) {
 	    	if(this.type == Type.CROIX) {
-	    		if(direction == "Haut") {
+	    		if(direction.equals("Haut")) {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
 		    		}
-	    		}else if(direction == "Bas") {
+	    		}else if(direction.equals("Bas")) {
 	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
 		    		}
-	    		}else if(direction == "Gauche") {
+	    		}else if(direction.equals("Gauche")) {
 	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 		    			res = true;
 		    		}
-	    		}else if(direction == "Droite") {
+	    		}else if(direction.equals("Droite")) {
 	    			if(suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 		    			res = true;
 		    		}
 	    		}
 	    	}else if(this.type == Type.VERTICAL) {
-	    		if(direction == "Haut") {
+	    		if(direction.equals("Haut")) {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
 		    		}
-	    		}else if(direction == "Bas") {
+	    		}else if(direction.equals("Bas")) {
 	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
 		    		}
 	    		}
 	    	}else if(this.type == Type.HORIZONTAL) {
-	    		if(direction == "Gauche") {
+	    		if(direction.equals("Gauche")) {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 		    			res = true;
 		    		}
-	    		}else if(direction == "Droite") {
+	    		}else if(direction.equals("Droite")) {
 	    			if(suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 		    			res = true;
 		    		}
 	    		}
 	    	}else if(this.type == Type.ANGLE_BAS_DROITE) {
-	    		if(direction == "Droite") {
+	    		if(direction.equals("Droite")) {
 	    			if(suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || (suivante.getType() == Type.HORIZONTAL)) {
 		    			res = true;
 		    		}
-	    		}else if(direction == "Bas") {
+	    		}else if(direction.equals("Bas")) {
 	    			if(suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.CROIX || (suivante.getType() == Type.VERTICAL)) {
 		    			res = true;
 		    		}
 	    		}
 	    	}else if(this.type == Type.ANGLE_BAS_GAUCHE) {
-	    		if(direction == "Gauche") {
+	    		if(direction.equals("Gauche")) {
 	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 		    			res = true;
 		    		}
-	    		}else if(direction == "Bas") {
+	    		}else if(direction.equals("Bas")) {
 	    			if(suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
 		    		}
 	    		}
 	    	}else if(this.type == Type.ANGLE_HAUT_DROITE) {
-	    		if(direction == "Droite") {
+	    		if(direction.equals("Droite")) {
 	    			if(suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.ANGLE_HAUT_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 		    			res = true;
 		    		}
-	    		}else if(direction == "Haut") {
+	    		}else if(direction.equals("Haut")) {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
 		    		}
@@ -114,7 +115,7 @@ public class Case {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_HAUT_DROITE || suivante.getType() == Type.CROIX || suivante.getType() == Type.HORIZONTAL) {
 		    			res = true;
 		    		}
-	    		}else if(direction == "Haut") {
+	    		}else if(direction.equals("Haut")) {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
 		    		}

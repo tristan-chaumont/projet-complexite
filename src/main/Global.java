@@ -2,6 +2,8 @@ package main;
 
 import plateau.Graphe;
 import plateau.Sommet;
+import tableau.Case;
+import tableau.Tableau;
 
 import java.io.*;
 
@@ -110,7 +112,7 @@ public class Global {
      * @return
      *      Le graphe aléatoire généré.
      */
-    public static Graphe genererGrapheAleatoire() {
+    /*public static Graphe genererGrapheAleatoire() {
         Graphe g;
         do {
             //g = new Graphe(50, 50);
@@ -125,27 +127,32 @@ public class Global {
             System.out.println("Ne contient pas de cycle.");
         } while(!g.contientCycle());
         return g;
-    }
+    }*/
 
-    //endregion
-
-    //region CREER PLATEAU PARFAIT
-
-    public static Graphe genererGraphePrefait(String fileName) {
-        Graphe plateau = null;
+    public static Plateau genererPlateauPrefait(String fileName, String classe) {
+        Plateau plateau = null;
         try {
             FileReader fileReader = new FileReader("plateauxPrefaits/" + fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = "";
             int count = 0;
             line = bufferedReader.readLine();
-            plateau = new Graphe(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
+            if(classe.equals("graphe")) {
+                plateau = new Graphe(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
+            } else {
+                plateau = new Tableau(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
+            }
             while ((line = bufferedReader.readLine()) != null) {
                 String[] splitLine = line.split(" ");
                 for (int i = 0; i < splitLine.length; i++) {
-                    Sommet sommet = getSommet(splitLine[i], count, i);
-                    plateau.relierSommetsAdjacents(sommet);
-                    plateau.addSommet(sommet);
+                    if(classe.equals("graphe")) {
+                        Sommet sommet = (Sommet) plateau.getCellule(count, i, splitLine[i]);
+                        ((Graphe) plateau).relierSommetsAdjacents(sommet);
+                        ((Graphe) plateau).addSommet(sommet);
+                    } else {
+                        Case c = (Case) plateau.getCellule(count, i, splitLine[i]);
+                        ((Tableau) plateau).setCase(count, i, c);
+                    }
                 }
                 count++;
             }
@@ -156,37 +163,4 @@ public class Global {
         }
         return plateau;
     }
-
-    private static Sommet getSommet(String type, int i, int j) {
-        Sommet sommet;
-        switch (type) {
-            case "AHD":
-                sommet = new Sommet(j, i, Type.ANGLE_HAUT_DROITE);
-                break;
-            case "AHG":
-                sommet = new Sommet(j, i, Type.ANGLE_HAUT_GAUCHE);
-                break;
-            case "ABG":
-                sommet = new Sommet(j, i, Type.ANGLE_BAS_GAUCHE);
-                break;
-            case "ABD":
-                sommet = new Sommet(j, i, Type.ANGLE_BAS_DROITE);
-                break;
-            case "H":
-                sommet = new Sommet(j, i, Type.HORIZONTAL);
-                break;
-            case "V":
-                sommet = new Sommet(j, i, Type.VERTICAL);
-                break;
-            case "C":
-                sommet = new Sommet(j, i, Type.CROIX);
-                break;
-            default:
-                sommet = new Sommet(j, i, Type.BLANC);
-                break;
-        }
-        return sommet;
-    }
-
-    //endregion
 }

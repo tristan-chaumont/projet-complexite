@@ -1,8 +1,14 @@
 package tableau;
 
+import main.Cellule;
 import main.Global.*;
+import plateau.Graphe;
+import plateau.Sommet;
 import main.Plateau;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -38,13 +44,9 @@ public class Tableau extends Plateau {
      * @param random
      * 			tableau random ou préfait
      */
-    public Tableau(int hauteur, int largeur, boolean random) {
+    public Tableau(int hauteur, int largeur) {
     	super(hauteur, largeur);
     	cases = new Case[hauteur][largeur];
-    	if(random)
-    		this.genererTableau();
-    	else
-    		this.genererTableauCorrect();
     }
     
     /**
@@ -85,46 +87,10 @@ public class Tableau extends Plateau {
     					break;
     			}
     			
-    			cases[i][j] = new Case(type);
+    			cases[i][j] = new Case(i, j, type);
         	}
     	}
     }
-	
-	/**
-	 * Méthode genererTableauCorrect
-	 * Permet de générer un tableau avec des cycles correct
-	 */
-	public void genererTableauCorrect() {
-			cases[0][0] = new Case(Type.ANGLE_BAS_DROITE);
-			cases[0][1] = new Case(Type.ANGLE_BAS_GAUCHE);
-			cases[0][2] = new Case(Type.BLANC);
-			cases[0][3] = new Case(Type.BLANC);
-			cases[0][4] = new Case(Type.BLANC);
-			
-			cases[1][0] = new Case(Type.ANGLE_HAUT_DROITE);
-			cases[1][1] = new Case(Type.ANGLE_HAUT_GAUCHE);
-			cases[1][2] = new Case(Type.BLANC);
-			cases[1][3] = new Case(Type.BLANC);
-			cases[1][4] = new Case(Type.BLANC);
-			
-			cases[2][0] = new Case(Type.BLANC);
-			cases[2][1] = new Case(Type.BLANC);
-			cases[2][2] = new Case(Type.ANGLE_BAS_DROITE);
-			cases[2][3] = new Case(Type.ANGLE_BAS_GAUCHE);
-			cases[2][4] = new Case(Type.BLANC);
-
-			cases[3][0] = new Case(Type.BLANC);
-			cases[3][1] = new Case(Type.BLANC);
-			cases[3][2] = new Case(Type.VERTICAL);
-			cases[3][3] = new Case(Type.CROIX);
-			cases[3][4] = new Case(Type.ANGLE_BAS_GAUCHE);
-			
-			cases[4][0] = new Case(Type.BLANC);
-			cases[4][1] = new Case(Type.BLANC);
-			cases[4][2] = new Case(Type.ANGLE_HAUT_DROITE);
-			cases[4][3] = new Case(Type.CROIX);
-			cases[4][4] = new Case(Type.ANGLE_HAUT_GAUCHE);
-	}
 
 	/**
 	 * Methode getCycles
@@ -246,7 +212,6 @@ public class Tableau extends Plateau {
 		//-> Si celle-ci n'est pas déjà comptée ou que c'est la case de début
 		//	 -> On ajoute la case, on la marque et on indique qu'on a trouvé une case correct, puis on recommence
 		ArrayList<Case> possibilites = getNumConnexions(start, prec, i, j);
-		System.out.println(possibilites);
 		for(int k = 0; k < possibilites.size(); k++) {
 			if(possibilites.get(k) != null) {
 				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start)) {
@@ -357,15 +322,44 @@ public class Tableau extends Plateau {
 		if((j > 0) && cases[i][j].caseCorrect(cases[i][j-1], start, "Gauche") && cases[i][j-1] != prec) {
 			res.add(cases[i][j-1]);
 		}
-		if(i > 0)
-			System.out.println(cases[i][j].caseCorrect(cases[i-1][j], start, "Haut"));
-		
 		if((i > 0) && cases[i][j].caseCorrect(cases[i-1][j], start, "Haut") && cases[i-1][j] != prec) {
 			res.add(cases[i-1][j]);
 		}
     	
     	return res;
     }
+	
+	@Override
+	public Cellule getCellule(int x, int y, String type) {
+		Case c;
+        switch (type) {
+            case "AHD":
+                c = new Case(x, y, Type.ANGLE_HAUT_DROITE);
+                break;
+            case "AHG":
+                c = new Case(x, y, Type.ANGLE_HAUT_GAUCHE);
+                break;
+            case "ABG":
+                c = new Case(x, y, Type.ANGLE_BAS_GAUCHE);
+                break;
+            case "ABD":
+                c = new Case(x, y, Type.ANGLE_BAS_DROITE);
+                break;
+            case "H":
+                c = new Case(x, y, Type.HORIZONTAL);
+                break;
+            case "V":
+                c = new Case(x, y, Type.VERTICAL);
+                break;
+            case "C":
+                c = new Case(x, y, Type.CROIX);
+                break;
+            default:
+                c = new Case(x, y, Type.BLANC);
+                break;
+        }
+        return c;
+	}
     
     /*************************/
    /****GETTERS & SETTERS****/
@@ -390,7 +384,7 @@ public class Tableau extends Plateau {
 	public void setHauteur(int h) {
 		hauteur = h;
 	}
-	
+
 	public int getHauteur() {
 		return hauteur;
 	}

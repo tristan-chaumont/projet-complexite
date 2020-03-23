@@ -1,5 +1,6 @@
 package plateau;
 
+import main.Cellule;
 import main.Global.*;
 
 import java.util.ArrayList;
@@ -9,22 +10,12 @@ import java.util.Objects;
  * Classe représentant un sommet.
  * @author Tristan
  */
-public class Sommet {
-
-    /**
-     * Coordonnées du sommet dans le graphe
-     */
-    private int x, y;
+public class Sommet extends Cellule {
 
     /**
      * Liste des sommets adjacents à celui-ci
      */
     private ArrayList<Sommet> adjacents;
-
-    /**
-     * Type du sommet (parmi les types du jeu Connect)
-     */
-    private Type type;
 
     /**
      * Tableau des branches du Sommet. Vaut true pour chaque branche qui existe sur ce sommet, sinon false.
@@ -46,9 +37,7 @@ public class Sommet {
      *      Type du sommet.
      */
     public Sommet(int abscisse, int ordonnee, Type type) {
-        x = abscisse;
-        y = ordonnee;
-        this.type = type;
+        super(abscisse, ordonnee, type);
         adjacents = new ArrayList<>();
         visited = false;
         attribuerBranches();
@@ -97,18 +86,6 @@ public class Sommet {
 
     public void addAdjacent(Sommet adjacent) {
         adjacents.add(adjacent);
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public Type getType() {
-        return type;
     }
 
     public ArrayList<Sommet> getAdjacents() {

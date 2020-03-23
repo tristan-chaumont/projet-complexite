@@ -109,7 +109,7 @@ public class Vue extends JFrame {
 
         Graphe plateau = (Graphe) this.plateau;
 
-        switch (sommet.getType()) {
+        switch (sommet.type) {
             case CROIX:
                 return ImageIO.read(new File(getCroixUrl(sommet)));
             case VERTICAL:
@@ -166,8 +166,8 @@ public class Vue extends JFrame {
         int[] branches = new int[sommetsAdjInCycle.size()];
 
         for (int i = 0; i < sommetsAdjInCycle.size(); i++) {
-            int x = sommetsAdjInCycle.get(i).getX() - sommet.getX();
-            int y = sommetsAdjInCycle.get(i).getY() - sommet.getY();
+            int x = sommetsAdjInCycle.get(i).x - sommet.x;
+            int y = sommetsAdjInCycle.get(i).y - sommet.y;
 
             if (x == -1 && y == 0) branches[i] = 3;
             else if (x == 1 && y == 0) branches[i] = 1;
