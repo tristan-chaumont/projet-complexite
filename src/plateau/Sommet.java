@@ -1,5 +1,6 @@
 package plateau;
 
+import main.Cellule;
 import main.Global.*;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Objects;
  * Classe représentant un sommet.
  * @author Tristan
  */
-public class Sommet {
+public class Sommet extends Cellule {
 
     /**
      * Coordonnées du sommet dans le graphe
@@ -46,9 +47,7 @@ public class Sommet {
      *      Type du sommet.
      */
     public Sommet(int abscisse, int ordonnee, Type type) {
-        x = abscisse;
-        y = ordonnee;
-        this.type = type;
+        super(abscisse, ordonnee, type);
         adjacents = new ArrayList<>();
         visited = false;
         attribuerBranches();

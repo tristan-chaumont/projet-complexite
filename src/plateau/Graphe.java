@@ -1,5 +1,7 @@
 package plateau;
 
+import main.Cellule;
+import main.Global;
 import main.Plateau;
 import tableau.Tableau;
 
@@ -147,6 +149,38 @@ public class Graphe extends Plateau {
         return from.getBranches()[branche] && to.getBranches()[branche > 1 ? branche - 2 : branche + 2];
     }
 
+    @Override
+    public Cellule getCellule(int x, int y, String type) {
+        Sommet sommet;
+        switch (type) {
+            case "AHD":
+                sommet = new Sommet(y, x, Global.Type.ANGLE_HAUT_DROITE);
+                break;
+            case "AHG":
+                sommet = new Sommet(y, x, Global.Type.ANGLE_HAUT_GAUCHE);
+                break;
+            case "ABG":
+                sommet = new Sommet(y, x, Global.Type.ANGLE_BAS_GAUCHE);
+                break;
+            case "ABD":
+                sommet = new Sommet(y, x, Global.Type.ANGLE_BAS_DROITE);
+                break;
+            case "H":
+                sommet = new Sommet(y, x, Global.Type.HORIZONTAL);
+                break;
+            case "V":
+                sommet = new Sommet(y, x, Global.Type.VERTICAL);
+                break;
+            case "C":
+                sommet = new Sommet(y, x, Global.Type.CROIX);
+                break;
+            default:
+                sommet = new Sommet(y, x, Global.Type.BLANC);
+                break;
+        }
+        return sommet;
+    }
+
     /**
      * Ajoute un arc entre deux sommets.
      * On ajoute chaque sommet dans la liste de sommets adjacent de l'autre.
@@ -184,7 +218,7 @@ public class Graphe extends Plateau {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] splitLine = line.split(" ");
                 for (int i = 0; i < splitLine.length; i++) {
-            		Sommet sommet = getSommet(splitLine[i], count, i);
+            		Sommet sommet = (Sommet) getCellule(count, i, splitLine[i]);
                     plateau.relierSommetsAdjacents(sommet);
                     plateau.addSommet(sommet);
                 }
