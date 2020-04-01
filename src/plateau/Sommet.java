@@ -20,7 +20,7 @@ public class Sommet extends Cellule {
     /**
      * Tableau des branches du Sommet. Vaut true pour chaque branche qui existe sur ce sommet, sinon false.
      */
-    private boolean[] branches = new boolean[4];
+    private boolean[] branches;
 
     /**
      * Si le sommet fait partie du plus long cycle ou non.
@@ -47,6 +47,7 @@ public class Sommet extends Cellule {
      * Attribue pour chaque branche du sommet, sa valeur true ou false en fonction de s'il peut être relié ou non.
      */
     public void attribuerBranches() {
+        branches = new boolean[4];
         switch (type) {
             case CROIX:
                 for (int i = 0; i < 4; i++) {
@@ -76,6 +77,7 @@ public class Sommet extends Cellule {
             case ANGLE_HAUT_DROITE:
                 branches[0] = true;
                 branches[1] = true;
+                break;
             default:
                 for (int i = 0; i < 4; i++) {
                     branches[i] = false;

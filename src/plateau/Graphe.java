@@ -32,6 +32,7 @@ public class Graphe extends Plateau {
         super(hauteur, largeur);
         sommets = new ArrayList<>();
         pre = new ArrayList<>();
+        circuits = new ArrayList<>();
         finCycle = null;
     }
 
@@ -53,43 +54,42 @@ public class Graphe extends Plateau {
      * @return
      *      true s'il existe un cycle, false sinon.
      */
-    private int contientCycleUtil(Sommet sommet, boolean[] visited, Sommet parent) {
+    private boolean contientCycleUtil(Sommet sommet, boolean[] visited, Sommet parent) {
         // Marque le sommet courant comme visité
         visited[sommets.indexOf(sommet)] = true;
+
+        ArrayList<ArrayList<Sommet>> circuitsInternes = new ArrayList<>();
 
         // Pour tous les sommets adjacents au sommet courant
         for (Sommet s : sommet.getAdjacents()) {
             // Si le noeud adjacent n'a pas été visité, alors on réexécute la méthode sur ce nouveau sommet
             if (!visited[sommets.indexOf(s)]) {
                 // Récurrence, on récupère la valeur du cycle
-                int value = contientCycleUtil(s, visited, sommet);
-                if (sommet == finCycle) {
+                boolean value = contientCycleUtil(s, visited, sommet);
+                if (sommet.getType().equals(Global.Type.CROIX)) {
+
+                } else if (sommet == finCycle) {
                     // Si on tombe sur le sommet de départ, alors c'est un cycle.
                     // On ajoute le sommet actuel dans la liste des prédécesseurs et on ajoute le cycle complet dans la liste des circuits.
                     // On retourne 2 pour marquer la fin du cycle.
                     pre.add(s);
                     circuits.add(pre);
-                    return 2;
-                } else if (value == 1) {
-                    // On continue l'algorithme si on ne trouve rien.
-                    // On ajoute le sommet actuel dans la liste des prédécesseurs.
-                    // On retourne 1 pour marquer la poursuite de l'algo.
-                    pre.add(s);
-                    return 1;
-                } else if (value == 2)
+                    return true;
+                } else if (value) {
                     // On a déjà trouvé le cycle, donc on arrête l'algorithme.
-                    return 2;
-
+                    pre.add(s);
+                    return true;
+                }
             // Si le sommet adjacent a été visité et que ce n'est pas un parent du sommet actuel, alors il y a un cycle.
             } else if (!s.equals(parent)) {
                 // On marque le sommet actuel comme fin de cycle.
                 // On l'ajoute dans la liste des prédecesseurs.
                 finCycle = s;
                 pre.add(s);
-                return 2;
+                return true;
             }
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -105,9 +105,8 @@ public class Graphe extends Plateau {
         for (int i = 0; i < visited.length; i++) {
             // On n'exécute pas la méthode helper si le chemin a déjà été visité.
             if (!visited[i])
-                if (contientCycleUtil(sommets.get(i), visited, null) == 2) {
-                    //TODO Vérifier comment on fait continuer l'algo même après avoir trouvé un premier circuit.
-                    return true;
+                if (contientCycleUtil(sommets.get(i), visited, null)) {
+                    pre = new ArrayList<>();
                 }
         }
 
@@ -170,28 +169,28 @@ public class Graphe extends Plateau {
         Sommet sommet;
         switch (type) {
             case "AHD":
-                sommet = new Sommet(y, x, Global.Type.ANGLE_HAUT_DROITE);
+                sommet = new Sommet(x, y, Global.Type.ANGLE_HAUT_DROITE);
                 break;
             case "AHG":
-                sommet = new Sommet(y, x, Global.Type.ANGLE_HAUT_GAUCHE);
+                sommet = new Sommet(x, y, Global.Type.ANGLE_HAUT_GAUCHE);
                 break;
             case "ABG":
-                sommet = new Sommet(y, x, Global.Type.ANGLE_BAS_GAUCHE);
+                sommet = new Sommet(x, y, Global.Type.ANGLE_BAS_GAUCHE);
                 break;
             case "ABD":
-                sommet = new Sommet(y, x, Global.Type.ANGLE_BAS_DROITE);
+                sommet = new Sommet(x, y, Global.Type.ANGLE_BAS_DROITE);
                 break;
             case "H":
-                sommet = new Sommet(y, x, Global.Type.HORIZONTAL);
+                sommet = new Sommet(x, y, Global.Type.HORIZONTAL);
                 break;
             case "V":
-                sommet = new Sommet(y, x, Global.Type.VERTICAL);
+                sommet = new Sommet(x, y, Global.Type.VERTICAL);
                 break;
             case "C":
-                sommet = new Sommet(y, x, Global.Type.CROIX);
+                sommet = new Sommet(x, y, Global.Type.CROIX);
                 break;
             default:
-                sommet = new Sommet(y, x, Global.Type.BLANC);
+                sommet = new Sommet(x, y, Global.Type.BLANC);
                 break;
         }
         return sommet;

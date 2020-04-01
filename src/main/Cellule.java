@@ -20,4 +20,8 @@ public abstract class Cellule {
     public int getY() {
         return y;
     }
+
+    public Type getType() {
+        return type;
+    }
 }

@@ -146,7 +146,7 @@ public class Global {
                 String[] splitLine = line.split(" ");
                 for (int i = 0; i < splitLine.length; i++) {
                     if(classe.equals("graphe")) {
-                        Sommet sommet = (Sommet) plateau.getCellule(count, i, splitLine[i]);
+                        Sommet sommet = (Sommet) plateau.getCellule(i, count, splitLine[i]);
                         ((Graphe) plateau).relierSommetsAdjacents(sommet);
                         ((Graphe) plateau).addSommet(sommet);
                     } else {

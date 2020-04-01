@@ -14,7 +14,7 @@ public abstract class Plateau {
      * @param largeur
      *      largeur du plateau
      */
-    public Plateau(int hauteur, int largeur) {
+    public Plateau(int largeur, int hauteur) {
         this.hauteur = hauteur;
         this.largeur = largeur;
     }

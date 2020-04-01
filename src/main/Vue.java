@@ -30,8 +30,11 @@ public class Vue extends JFrame {
         	Tableau.backtrack(null, 0, 0, false);
         	cycle = ((Tableau) plateau).getMeilleurCycle();
         }else {
-        	((Graphe) plateau).contientCycle();
-            System.out.println(((Graphe)plateau).getCircuits().stream().mapToInt(ArrayList::size).max());
+            Graphe graphe = (Graphe) plateau;
+        	graphe.contientCycle();
+            System.out.println("Nombre de circuits trouvés : " + graphe.getCircuits().size());
+        	System.out.println("Taille du circuit le plus long : " + graphe.getCircuits().stream().mapToInt(ArrayList::size).max().orElse(0));
+            graphe.getCircuits().forEach(s -> System.out.println(String.format("Taille du circuit %d : %d", graphe.getCircuits().indexOf(s), s.size())));
         }
             
         long fin = System.currentTimeMillis();
@@ -110,22 +113,23 @@ public class Vue extends JFrame {
             return ImageIO.read(new File("sprites/blanc.png"));
 
         Graphe plateau = (Graphe) this.plateau;
+        ArrayList<Sommet> circuit = plateau.getCircuits().stream().max(Comparator.comparingInt(ArrayList::size)).get();
 
         switch (sommet.type) {
             case CROIX:
                 return ImageIO.read(new File(getCroixUrl(sommet)));
             case VERTICAL:
-                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
+                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
             case HORIZONTAL:
-                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
+                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
             case ANGLE_HAUT_DROITE:
-                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
+                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
             case ANGLE_BAS_DROITE:
-                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
+                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
             case ANGLE_HAUT_GAUCHE:
-                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
+                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
             case ANGLE_BAS_GAUCHE:
-                return ImageIO.read(new File(plateau.getPre().contains(sommet) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
+                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
             default:
                 return ImageIO.read(new File("sprites/blanc.png"));
         }
