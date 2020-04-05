@@ -138,7 +138,7 @@ public class Global {
             int count = 0;
             line = bufferedReader.readLine();
             if(classe.equals("graphe")) {
-                plateau = new Graphe(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
+                plateau = new Graphe(Integer.parseInt(line.split(" ")[1]), Integer.parseInt(line.split(" ")[0]));
             } else {
                 plateau = new Tableau(Integer.parseInt(line.split(" ")[0]), Integer.parseInt(line.split(" ")[1]));
             }
