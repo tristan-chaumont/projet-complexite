@@ -214,20 +214,27 @@ public class Tableau extends Plateau {
 		ArrayList<Case> possibilites = getNumConnexions(start, prec, i, j);
 		for(int k = 0; k < possibilites.size(); k++) {
 			if(possibilites.get(k) != null) {
+				
+				
+				ArrayList<Case> possibilitesC1 = getNumConnexions(start, prec, i, j);
+				System.out.println(possibilitesC1.size());
+				
 				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || (possibilites.get(k).getType() == Type.CROIX)) {
 					listeCases.add(possibilites.get(k));
 					possibilites.get(k).setCaseCompte();
 					estPasse = true;
 					ArrayList<Integer> indexes = getIndexes(possibilites.get(k));
 					
-					try {
+					//try {
 						if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), false)) {
 							return true;
 						}
+						/*
 					}catch(StackOverflowError e) {
 						System.err.println("Erreur, aucun circuit");
 						System.exit(2);
 					}
+					*/
 				}
 			}
 		}
