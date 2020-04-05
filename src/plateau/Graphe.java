@@ -1,7 +1,7 @@
 package plateau;
 
 import main.Cellule;
-import main.Global;
+import static main.Global.*;
 import main.Plateau;
 import tableau.Tableau;
 
@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Classe représentant un Graphe avec ses sommets ainsi que les méthodes afin de trouver un cycle.
@@ -57,6 +58,7 @@ public class Graphe extends Plateau {
     private boolean contientCycleUtil(Sommet sommet, boolean[] visited, Sommet parent) {
         // Marque le sommet courant comme visité
         visited[sommets.indexOf(sommet)] = true;
+        sommet.setVisited();
 
         ArrayList<ArrayList<Sommet>> circuitsInternes = new ArrayList<>();
 
@@ -64,11 +66,25 @@ public class Graphe extends Plateau {
         for (Sommet s : sommet.getAdjacents()) {
             // Si le noeud adjacent n'a pas été visité, alors on réexécute la méthode sur ce nouveau sommet
             if (!visited[sommets.indexOf(s)]) {
+                // Si le sommet est une CROIX et qu'elle n'a pas 4 voisins, ce n'est pas un circuit parfait. On retourne false
+                if (sommet.getType().equals(Type.CROIX) && sommet.getAdjacents().size() < 4)
+                    return false;
+
+                if (s.getType().equals(Type.CROIX)) {
+                    ArrayList<Sommet> nonVisites = (ArrayList<Sommet>) s.getAdjacents().stream().filter(som -> !som.isVisited()).collect(Collectors.toList());
+                    for (Sommet adjacent: nonVisites) {
+                        if (!contientCycleUtil(adjacent, visited, s))
+                            return false;
+                    }
+
+                    return true;
+                }
+
                 // Récurrence, on récupère la valeur du cycle
                 boolean value = contientCycleUtil(s, visited, sommet);
-                if (sommet.getType().equals(Global.Type.CROIX)) {
 
-                } else if (sommet == finCycle) {
+                // Si le sommet actuel est une CROIX (et qu'elle a donc 4 voisins, condition vérifiée juste au-dessus)
+                if (sommet == finCycle) {
                     // Si on tombe sur le sommet de départ, alors c'est un cycle.
                     // On ajoute le sommet actuel dans la liste des prédécesseurs et on ajoute le cycle complet dans la liste des circuits.
                     // On retourne 2 pour marquer la fin du cycle.
@@ -100,17 +116,19 @@ public class Graphe extends Plateau {
     public boolean contientCycle() {
         // Tableau des sommets visités. Initialement tous à false.
         boolean[] visited = new boolean[sommets.size()];
+        boolean containCycle = false;
 
         // Utilise l'algo DFS (Depth First Search) pour détecter les cycles.
         for (int i = 0; i < visited.length; i++) {
             // On n'exécute pas la méthode helper si le chemin a déjà été visité.
             if (!visited[i])
                 if (contientCycleUtil(sommets.get(i), visited, null)) {
+                    containCycle = true;
                     pre = new ArrayList<>();
                 }
         }
 
-        return false;
+        return containCycle;
     }
 
     /**
@@ -169,28 +187,28 @@ public class Graphe extends Plateau {
         Sommet sommet;
         switch (type) {
             case "AHD":
-                sommet = new Sommet(x, y, Global.Type.ANGLE_HAUT_DROITE);
+                sommet = new Sommet(x, y, Type.ANGLE_HAUT_DROITE);
                 break;
             case "AHG":
-                sommet = new Sommet(x, y, Global.Type.ANGLE_HAUT_GAUCHE);
+                sommet = new Sommet(x, y, Type.ANGLE_HAUT_GAUCHE);
                 break;
             case "ABG":
-                sommet = new Sommet(x, y, Global.Type.ANGLE_BAS_GAUCHE);
+                sommet = new Sommet(x, y, Type.ANGLE_BAS_GAUCHE);
                 break;
             case "ABD":
-                sommet = new Sommet(x, y, Global.Type.ANGLE_BAS_DROITE);
+                sommet = new Sommet(x, y, Type.ANGLE_BAS_DROITE);
                 break;
             case "H":
-                sommet = new Sommet(x, y, Global.Type.HORIZONTAL);
+                sommet = new Sommet(x, y, Type.HORIZONTAL);
                 break;
             case "V":
-                sommet = new Sommet(x, y, Global.Type.VERTICAL);
+                sommet = new Sommet(x, y, Type.VERTICAL);
                 break;
             case "C":
-                sommet = new Sommet(x, y, Global.Type.CROIX);
+                sommet = new Sommet(x, y, Type.CROIX);
                 break;
             default:
-                sommet = new Sommet(x, y, Global.Type.BLANC);
+                sommet = new Sommet(x, y, Type.BLANC);
                 break;
         }
         return sommet;

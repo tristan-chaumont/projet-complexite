@@ -41,9 +41,7 @@ public class Tableau extends Plateau {
      * 			hauteur du tableau
      * @param largeur
      * 			largeur du tableau
-     * @param random
-     * 			tableau random ou préfait
-     */
+	 */
     public Tableau(int hauteur, int largeur) {
     	super(largeur, hauteur);
     	cases = new Case[hauteur][largeur];
