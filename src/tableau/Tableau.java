@@ -179,6 +179,7 @@ public class Tableau extends Plateau {
 	 * 			Boolean
 	 */
     public static boolean backtrack(Case prec, int i, int j, boolean affect) {
+    	System.out.println(i +";" +j);
 		boolean estPasse = false;
 		
 		//Si la case de début n'est pas initialisée
