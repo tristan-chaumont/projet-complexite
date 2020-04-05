@@ -46,7 +46,7 @@ public class Vue extends JFrame {
             circuits = graphe.getCircuits();
             circuits.remove(circuitMax);
 
-            System.out.println("Nombre de circuits trouvés : " + graphe.getCircuits().size());
+            System.out.println("Nombre de circuits trouvé : " + graphe.getCircuits().size());
         	System.out.println("Taille du circuit le plus long : " + graphe.getCircuits().stream().mapToInt(ArrayList::size).max().orElse(0));
             graphe.getCircuits().forEach(s -> System.out.println(String.format("Taille du circuit %d : %d", graphe.getCircuits().indexOf(s) + 1, s.size())));
         }
