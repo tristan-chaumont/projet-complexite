@@ -56,13 +56,13 @@ public class Graphe extends Plateau {
      *      true s'il existe un cycle, false sinon.
      */
     private boolean contientCycleUtil(Sommet sommet, boolean[] visited, Sommet parent) {
-        // Marque le sommet courant comme visité
-        visited[sommets.indexOf(sommet)] = true;
-        sommet.setVisited();
-
         // Si le sommet est une CROIX et qu'elle n'a pas 4 voisins, ce n'est pas un circuit parfait. On retourne false
         if (sommet.getType().equals(Type.CROIX) && sommet.getAdjacents().size() < 4)
             return false;
+
+        // Marque le sommet courant comme visité
+        visited[sommets.indexOf(sommet)] = true;
+        sommet.setVisited();
 
         // Si le sommet est une CROIX alors, pour chacun de ses sommets adjacents, on essaie de trouver un cycle.
         // On ajoute le sommet adjacent dans la liste des prédécesseurs s'il n'a pas été visité (pour éviter les doublons).

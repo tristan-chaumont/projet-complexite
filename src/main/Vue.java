@@ -34,6 +34,7 @@ public class Vue extends JFrame {
         if(plateau instanceof Tableau) {
         	Tableau.backtrack(null, 0, 0, false);
         	cycle = ((Tableau) plateau).getMeilleurCycle();
+            fin = System.currentTimeMillis();
         }else {
             Graphe graphe = (Graphe) plateau;
         	graphe.contientCycle();

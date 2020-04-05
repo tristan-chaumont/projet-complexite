@@ -2,6 +2,8 @@ package main;
 
 import plateau.Sommet;
 
+import java.util.ArrayList;
+
 public abstract class Plateau {
 
     protected static int hauteur;
