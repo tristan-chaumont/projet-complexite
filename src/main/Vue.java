@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
@@ -24,22 +25,31 @@ public class Vue extends JFrame {
     private GridLayout grid;
     
     private ArrayList<Case> cycle;
+    private ArrayList<Sommet> circuitMax;
+    private ArrayList<ArrayList<Sommet>> circuits;
 
     public Vue(Plateau plateau) throws IOException, ConnectException {
         this.plateau = plateau;
-        long debut = System.currentTimeMillis();
+        long debut = System.currentTimeMillis(), fin = 0;
         if(plateau instanceof Tableau) {
         	Tableau.backtrack(null, 0, 0, false);
         	cycle = ((Tableau) plateau).getMeilleurCycle();
         }else {
             Graphe graphe = (Graphe) plateau;
         	graphe.contientCycle();
+            fin = System.currentTimeMillis();
+
+            // SET CIRCUIT MAX
+            Optional<ArrayList<Sommet>> optionalCircuit = graphe.getCircuits().stream().max(Comparator.comparingInt(ArrayList::size));
+            circuitMax = optionalCircuit.orElseGet(ArrayList::new);
+            circuits = graphe.getCircuits();
+            circuits.remove(circuitMax);
+
             System.out.println("Nombre de circuits trouvés : " + graphe.getCircuits().size());
         	System.out.println("Taille du circuit le plus long : " + graphe.getCircuits().stream().mapToInt(ArrayList::size).max().orElse(0));
-            graphe.getCircuits().forEach(s -> System.out.println(String.format("Taille du circuit %d : %d", graphe.getCircuits().indexOf(s), s.size())));
+            graphe.getCircuits().forEach(s -> System.out.println(String.format("Taille du circuit %d : %d", graphe.getCircuits().indexOf(s) + 1, s.size())));
         }
-            
-        long fin = System.currentTimeMillis();
+
         grid = new GridLayout(plateau.getHauteur(), plateau.getLargeur());
         panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -56,7 +66,7 @@ public class Vue extends JFrame {
     }
 
     public void setPlateauSize() {
-        int width = 0, height = 0;
+        int width, height;
     	if(plateau.getLargeur() * 50 > 1920 && plateau.getHauteur() * 50 > 1080) {
             GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
             width = gd.getDisplayMode().getWidth();
@@ -114,32 +124,27 @@ public class Vue extends JFrame {
         if(sommet == null)
             return ImageIO.read(new File("sprites/blanc.png"));
 
-        Graphe plateau = (Graphe) this.plateau;
-        Optional<ArrayList<Sommet>> optionalCircuit = plateau.getCircuits().stream().max(Comparator.comparingInt(ArrayList::size));
-        ArrayList<Sommet> circuitMax;
-        circuitMax = optionalCircuit.orElseGet(ArrayList::new);
-
         switch (sommet.type) {
             case CROIX:
-                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/croix_max.png" : "sprites/croix_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/croix_max.png" : contientSommet(circuits, sommet) ? "sprites/croix_plein.png" : "sprites/croix_vide.png"));
             case VERTICAL:
-                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/vertical_max.png" : "sprites/vertical_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/vertical_max.png" : contientSommet(circuits, sommet) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
             case HORIZONTAL:
-                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/horizontal_max.png" : "sprites/horizontal_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/horizontal_max.png" : contientSommet(circuits, sommet) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
             case ANGLE_HAUT_DROITE:
-                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_haut_droite_max.png" : "sprites/angle_haut_droite_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_haut_droite_max.png" : contientSommet(circuits, sommet) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
             case ANGLE_BAS_DROITE:
-                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_bas_droite_max.png" : "sprites/angle_bas_droite_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_bas_droite_max.png" : contientSommet(circuits, sommet) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
             case ANGLE_HAUT_GAUCHE:
-                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_haut_gauche_max.png" : "sprites/angle_haut_gauche_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_haut_gauche_max.png" : contientSommet(circuits, sommet) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
             case ANGLE_BAS_GAUCHE:
-                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_bas_gauche_max.png" : "sprites/angle_bas_gauche_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_bas_gauche_max.png" : contientSommet(circuits, sommet) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
             default:
                 return ImageIO.read(new File("sprites/blanc.png"));
         }
     }
 
-    public boolean contientSommetDansCircuitsPasMax(ArrayList<ArrayList<Sommet>> circuits, Sommet sommet) {
+    public boolean contientSommet(ArrayList<ArrayList<Sommet>> circuits, Sommet sommet) {
         for (ArrayList<Sommet> circuit: circuits) {
             if (circuit.contains(sommet)) return true;
         }
