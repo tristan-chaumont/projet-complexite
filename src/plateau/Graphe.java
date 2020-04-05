@@ -73,8 +73,9 @@ public class Graphe extends Plateau {
             for (Sommet adjacent: nonVisites) {
                 if (!adjacent.isVisited()) {
                     pre.add(adjacent);
-                    if (!contientCycleUtil(adjacent, visited, sommet))
+                    if (!contientCycleUtil(adjacent, visited, sommet)) {
                         return false;
+                    }
                 }
             }
             circuits.add(pre);
@@ -129,8 +130,8 @@ public class Graphe extends Plateau {
             if (!visited[i])
                 if (contientCycleUtil(sommets.get(i), visited, null)) {
                     containCycle = true;
-                    pre = new ArrayList<>();
                 }
+            pre = new ArrayList<>();
         }
 
         return containCycle;
