@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Vue extends JFrame {
@@ -23,7 +25,7 @@ public class Vue extends JFrame {
     
     private ArrayList<Case> cycle;
 
-    public Vue(Plateau plateau) throws IOException {
+    public Vue(Plateau plateau) throws IOException, ConnectException {
         this.plateau = plateau;
         long debut = System.currentTimeMillis();
         if(plateau instanceof Tableau) {
@@ -67,7 +69,7 @@ public class Vue extends JFrame {
         setMinimumSize(new Dimension(width, height));
     }
 
-    public void addImagesAndBorder() throws IOException {
+    public void addImagesAndBorder() throws IOException, ConnectException {
         for (int i = 0; i < plateau.getHauteur(); i++) {
             for (int j = 0; j < plateau.getLargeur(); j++) {
 
@@ -108,12 +110,17 @@ public class Vue extends JFrame {
      * @throws IOException
      *      Si le fichier est introuvable.
      */
-    public BufferedImage getUrl(Sommet sommet) throws IOException {
+    public BufferedImage getUrl(Sommet sommet) throws IOException, ConnectException {
         if(sommet == null)
             return ImageIO.read(new File("sprites/blanc.png"));
 
         Graphe plateau = (Graphe) this.plateau;
-        ArrayList<Sommet> circuit = plateau.getCircuits().stream().max(Comparator.comparingInt(ArrayList::size)).get();
+        Optional<ArrayList<Sommet>> optionalCircuit = plateau.getCircuits().stream().max(Comparator.comparingInt(ArrayList::size));
+        ArrayList<Sommet> circuit;
+        if (optionalCircuit.isPresent()) {
+            circuit = optionalCircuit.get();
+        } else
+            throw new ConnectException("Il n'y a pas de circuit parfait sur ce plateau");
 
         switch (sommet.type) {
             case CROIX:

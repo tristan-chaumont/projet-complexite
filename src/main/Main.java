@@ -18,6 +18,8 @@ public class Main {
         	//Vue vue = new Vue(new Tableau(10, 10, true));
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ConnectException ce) {
+            System.out.println(ce.getMessage());
         }
     }
 }

@@ -60,26 +60,31 @@ public class Graphe extends Plateau {
         visited[sommets.indexOf(sommet)] = true;
         sommet.setVisited();
 
-        ArrayList<ArrayList<Sommet>> circuitsInternes = new ArrayList<>();
+        // Si le sommet est une CROIX et qu'elle n'a pas 4 voisins, ce n'est pas un circuit parfait. On retourne false
+        if (sommet.getType().equals(Type.CROIX) && sommet.getAdjacents().size() < 4)
+            return false;
+
+        // Si le sommet est une CROIX alors, pour chacun de ses sommets adjacents, on essaie de trouver un cycle.
+        // On ajoute le sommet adjacent dans la liste des prédécesseurs s'il n'a pas été visité (pour éviter les doublons).
+        // On exécute l'algo de recherche d'un circuit à partir du sommet adjacent.
+        // Si on ne trouve pas de circuit, c'est que le circuit n'est pas parfait.
+        if (sommet.getType().equals(Type.CROIX)) {
+            ArrayList<Sommet> nonVisites = (ArrayList<Sommet>) sommet.getAdjacents().stream().filter(som -> !som.isVisited()).collect(Collectors.toList());
+            for (Sommet adjacent: nonVisites) {
+                if (!adjacent.isVisited()) {
+                    pre.add(adjacent);
+                    if (!contientCycleUtil(adjacent, visited, sommet))
+                        return false;
+                }
+            }
+            circuits.add(pre);
+            return true;
+        }
 
         // Pour tous les sommets adjacents au sommet courant
         for (Sommet s : sommet.getAdjacents()) {
             // Si le noeud adjacent n'a pas été visité, alors on réexécute la méthode sur ce nouveau sommet
             if (!visited[sommets.indexOf(s)]) {
-                // Si le sommet est une CROIX et qu'elle n'a pas 4 voisins, ce n'est pas un circuit parfait. On retourne false
-                if (sommet.getType().equals(Type.CROIX) && sommet.getAdjacents().size() < 4)
-                    return false;
-
-                if (s.getType().equals(Type.CROIX)) {
-                    ArrayList<Sommet> nonVisites = (ArrayList<Sommet>) s.getAdjacents().stream().filter(som -> !som.isVisited()).collect(Collectors.toList());
-                    for (Sommet adjacent: nonVisites) {
-                        if (!contientCycleUtil(adjacent, visited, s))
-                            return false;
-                    }
-
-                    return true;
-                }
-
                 // Récurrence, on récupère la valeur du cycle
                 boolean value = contientCycleUtil(s, visited, sommet);
 
