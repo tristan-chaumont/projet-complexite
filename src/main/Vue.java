@@ -116,30 +116,34 @@ public class Vue extends JFrame {
 
         Graphe plateau = (Graphe) this.plateau;
         Optional<ArrayList<Sommet>> optionalCircuit = plateau.getCircuits().stream().max(Comparator.comparingInt(ArrayList::size));
-        ArrayList<Sommet> circuit;
-        if (optionalCircuit.isPresent()) {
-            circuit = optionalCircuit.get();
-        } else
-            throw new ConnectException("Il n'y a pas de circuit parfait sur ce plateau");
+        ArrayList<Sommet> circuitMax;
+        circuitMax = optionalCircuit.orElseGet(ArrayList::new);
 
         switch (sommet.type) {
             case CROIX:
-                return ImageIO.read(new File(getCroixUrl(sommet)));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/croix_max.png" : "sprites/croix_vide.png"));
             case VERTICAL:
-                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/vertical_max.png" : "sprites/vertical_vide.png"));
             case HORIZONTAL:
-                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/horizontal_max.png" : "sprites/horizontal_vide.png"));
             case ANGLE_HAUT_DROITE:
-                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_haut_droite_max.png" : "sprites/angle_haut_droite_vide.png"));
             case ANGLE_BAS_DROITE:
-                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_bas_droite_max.png" : "sprites/angle_bas_droite_vide.png"));
             case ANGLE_HAUT_GAUCHE:
-                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_haut_gauche_max.png" : "sprites/angle_haut_gauche_vide.png"));
             case ANGLE_BAS_GAUCHE:
-                return ImageIO.read(new File(circuit.contains(sommet) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
+                return ImageIO.read(new File(circuitMax.contains(sommet) ? "sprites/angle_bas_gauche_max.png" : "sprites/angle_bas_gauche_vide.png"));
             default:
                 return ImageIO.read(new File("sprites/blanc.png"));
         }
+    }
+
+    public boolean contientSommetDansCircuitsPasMax(ArrayList<ArrayList<Sommet>> circuits, Sommet sommet) {
+        for (ArrayList<Sommet> circuit: circuits) {
+            if (circuit.contains(sommet)) return true;
+        }
+        return false;
     }
     
     public BufferedImage getUrl(Case c) throws IOException {
@@ -150,31 +154,32 @@ public class Vue extends JFrame {
 
         switch (c.getType()) {
             case CROIX:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/croix_pleine.png" : "sprites/croix_vide.png"));
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/croix_max.png" : "sprites/croix_vide.png"));
             case VERTICAL:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/vertical_max.png" : "sprites/vertical_vide.png"));
             case HORIZONTAL:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/horizontal_max.png" : "sprites/horizontal_vide.png"));
             case ANGLE_HAUT_DROITE:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_haut_droite_max.png" : "sprites/angle_haut_droite_vide.png"));
             case ANGLE_BAS_DROITE:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_bas_droite_max.png" : "sprites/angle_bas_droite_vide.png"));
             case ANGLE_HAUT_GAUCHE:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_haut_gauche_max.png" : "sprites/angle_haut_gauche_vide.png"));
             case ANGLE_BAS_GAUCHE:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
+                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_bas_gauche_max.png" : "sprites/angle_bas_gauche_vide.png"));
             default:
                 return ImageIO.read(new File("sprites/blanc.png"));
         }
     }
 
-    public String getCroixUrl(Sommet sommet) {
+    // ON GARDE MAIS C'EST INUTILE POUR LE MOMENT.
+    /*public String getCroixUrl(Sommet sommet) {
         Graphe plateau = (Graphe) this.plateau;
         if (!plateau.getPre().contains(sommet)) return "sprites/croix_vide.png";
 
         ArrayList<Sommet> sommetsAdjInCycle = (ArrayList<Sommet>) sommet.getAdjacents().stream().filter(s -> plateau.getPre().contains(s)).collect(Collectors.toList());
 
-        if(sommetsAdjInCycle.size() == 4) return "sprites/croix_pleine.png";
+        if(sommetsAdjInCycle.size() == 4) return "sprites/croix_max.png";
 
         int[] branches = new int[sommetsAdjInCycle.size()];
 
@@ -203,5 +208,5 @@ public class Vue extends JFrame {
                 return "sprites/croix_angle_haut_gauche_plein.png";
         }
         return "sprites/croix_vide.png";
-    }
+    }*/
 }
