@@ -45,7 +45,7 @@ public class Tableau extends Plateau {
      * 			tableau random ou préfait
      */
     public Tableau(int hauteur, int largeur) {
-    	super(hauteur, largeur);
+    	super(largeur, hauteur);
     	cases = new Case[hauteur][largeur];
     }
     
@@ -185,25 +185,27 @@ public class Tableau extends Plateau {
 		
 		//Si la case de début n'est pas initialisée
 		//-> On l'initialise et on la marque
-		if(start == null) {
+		if(start == null || start.getType() == Type.BLANC) {
 			start = cases[i][j];
 			start.setCaseCompte();
 			affect = true;
 		}
 		
 		//Si la case actuel est la case de début, qu'elle ne vient pas d'être affectée 
-		//-> On ajoute le cycle, puis on recommance
+		//-> On ajoute le cycle, puis on recommence
 		if(cases[i][j] == start && !affect && listeCases.size() >= 4) {
-			listeCycle.add(listeCases);
-			
-			listeCases = new ArrayList<Case>();
-			start = getFirstNonMarque();
-			cases[i][j].setCaseCompte();
-			
-			ArrayList<Integer> indexes = getIndexes(start);
-			
-			if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), true)) {
-				return true;
+			if(start.getType() != Type.CROIX) {
+				listeCycle.add(listeCases);
+				
+				listeCases = new ArrayList<Case>();
+				start = getFirstNonMarque();
+				cases[i][j].setCaseCompte();
+				
+				ArrayList<Integer> indexes = getIndexes(start);
+				
+				if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), true)) {
+					return true;
+				}
 			}
 		}
 		
@@ -214,14 +216,19 @@ public class Tableau extends Plateau {
 		ArrayList<Case> possibilites = getNumConnexions(start, prec, i, j);
 		for(int k = 0; k < possibilites.size(); k++) {
 			if(possibilites.get(k) != null) {
-				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start)) {
+				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || (possibilites.get(k).getType() == Type.CROIX)) {
 					listeCases.add(possibilites.get(k));
 					possibilites.get(k).setCaseCompte();
 					estPasse = true;
 					ArrayList<Integer> indexes = getIndexes(possibilites.get(k));
 					
-					if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), false)) {
-						return true;
+					try {
+						if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), false)) {
+							return true;
+						}
+					}catch(StackOverflowError e) {
+						System.err.println("Erreur, aucun circuit");
+						System.exit(2);
 					}
 				}
 			}
@@ -313,18 +320,20 @@ public class Tableau extends Plateau {
 	 */
 	public static ArrayList<Case> getNumConnexions(Case start, Case prec, int i, int j) {
     	ArrayList<Case> res = new ArrayList<Case>();
-		if((j < largeur-1) && cases[i][j].caseCorrect(cases[i][j+1], start, "Droite") && cases[i][j+1] != prec) {
-			res.add(cases[i][j+1]);
-		}
-		if((i < hauteur-1) && cases[i][j].caseCorrect(cases[i+1][j], start, "Bas") && cases[i+1][j] != prec) {
-			res.add(cases[i+1][j]);
-		}
-		if((j > 0) && cases[i][j].caseCorrect(cases[i][j-1], start, "Gauche") && cases[i][j-1] != prec) {
-			res.add(cases[i][j-1]);
-		}
-		if((i > 0) && cases[i][j].caseCorrect(cases[i-1][j], start, "Haut") && cases[i-1][j] != prec) {
-			res.add(cases[i-1][j]);
-		}
+    	if(start != null) {
+    		if((j < largeur-1) && cases[i][j].caseCorrect(cases[i][j+1], start, "Droite") && cases[i][j+1] != prec) {
+    			res.add(cases[i][j+1]);
+    		}
+    		if((i < hauteur-1) && cases[i][j].caseCorrect(cases[i+1][j], start, "Bas") && cases[i+1][j] != prec) {
+    			res.add(cases[i+1][j]);
+    		}
+    		if((j > 0) && cases[i][j].caseCorrect(cases[i][j-1], start, "Gauche") && cases[i][j-1] != prec) {
+    			res.add(cases[i][j-1]);
+    		}
+    		if((i > 0) && cases[i][j].caseCorrect(cases[i-1][j], start, "Haut") && cases[i-1][j] != prec) {
+    			res.add(cases[i-1][j]);
+    		}
+    	}
     	
     	return res;
     }

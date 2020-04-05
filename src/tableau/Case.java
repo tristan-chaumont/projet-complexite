@@ -13,13 +13,13 @@ public class Case extends Cellule {
 	 * Booleen permettant de savoir si la case a �t� compt�e
 	 */
 	private boolean compte;
-	/**
-	 * Type de la case
-	 */
-    private Type type;
 
     /**
      * Constructeur
+     * @param abscisse
+     * 			Coordonnée en abscisse de la case
+     * @param ordonnee
+     * 			Coordonnée en ordonnée de la case
      * @param type
      * 			Type de la case
      */
@@ -41,8 +41,8 @@ public class Case extends Cellule {
     public boolean caseCorrect(Case suivante, Case start, String direction) {
     	boolean res = false;
     	
-    	if(suivante.getType() != Type.BLANC && ((!suivante.estCompte()) || (suivante.estCompte() && suivante == start))) {
-	    	if(this.type == Type.CROIX) {
+    	if((suivante.getType() != Type.BLANC && (!suivante.estCompte()) || (suivante.estCompte() && suivante == start)) || (suivante.estCompte() && suivante.getType() == Type.CROIX)) {
+    		if(this.type == Type.CROIX) {
 	    		if(direction.equals("Haut")) {
 	    			if(suivante.getType() == Type.ANGLE_BAS_DROITE || suivante.getType() == Type.ANGLE_BAS_GAUCHE || suivante.getType() == Type.CROIX || suivante.getType() == Type.VERTICAL) {
 		    			res = true;
