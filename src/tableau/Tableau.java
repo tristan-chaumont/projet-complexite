@@ -179,6 +179,7 @@ public class Tableau extends Plateau {
 	 * 			Boolean
 	 */
     public static boolean backtrack(Case prec, int i, int j, boolean affect) {
+    	System.out.println(i +";" +j);
 		boolean estPasse = false;
 		
 		//Si la case de début n'est pas initialisée
@@ -211,22 +212,22 @@ public class Tableau extends Plateau {
 		//Pour chaque case adjacente
 		//-> Si celle-ci n'est pas déjà comptée ou que c'est la case de début
 		//	 -> On ajoute la case, on la marque et on indique qu'on a trouvé une case correct, puis on recommence
-		ArrayList<Case> possibilites = getNumConnexions(start, prec, i, j);
+		ArrayList<Case> possibilites = getNumConnexionsStrict(start, prec, i, j);
 		for(int k = 0; k < possibilites.size(); k++) {
 			if(possibilites.get(k) != null) {
-				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || (possibilites.get(k).getType() == Type.CROIX)) {
+				
+				//On vérifie que si c'est une croix, tout les branches soit occupées
+				ArrayList<Integer> ind = getIndexes(possibilites.get(k));
+				ArrayList<Case> possibilitesC1 = getNumConnexions(start, ind.get(0), ind.get(1));
+				
+				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || (possibilites.get(k).getType() == Type.CROIX && possibilitesC1.size() == 4 && getOccCase(possibilites.get(k)) <= 2)) {
 					listeCases.add(possibilites.get(k));
 					possibilites.get(k).setCaseCompte();
 					estPasse = true;
 					ArrayList<Integer> indexes = getIndexes(possibilites.get(k));
-					
-					try {
-						if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), false)) {
-							return true;
-						}
-					}catch(StackOverflowError e) {
-						System.err.println("Erreur, aucun circuit");
-						System.exit(2);
+
+					if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), false)) {
+						return true;
 					}
 				}
 			}
@@ -316,7 +317,7 @@ public class Tableau extends Plateau {
 	 * @return
 	 * 			La liste de case adjacente
 	 */
-	public static ArrayList<Case> getNumConnexions(Case start, Case prec, int i, int j) {
+	public static ArrayList<Case> getNumConnexionsStrict(Case start, Case prec, int i, int j) {
     	ArrayList<Case> res = new ArrayList<Case>();
     	if(start != null) {
     		if((j < largeur-1) && cases[i][j].caseCorrect(cases[i][j+1], start, "Droite") && cases[i][j+1] != prec) {
@@ -329,6 +330,26 @@ public class Tableau extends Plateau {
     			res.add(cases[i][j-1]);
     		}
     		if((i > 0) && cases[i][j].caseCorrect(cases[i-1][j], start, "Haut") && cases[i-1][j] != prec) {
+    			res.add(cases[i-1][j]);
+    		}
+    	}
+    	
+    	return res;
+    }
+	
+	public static ArrayList<Case> getNumConnexions(Case start, int i, int j) {
+    	ArrayList<Case> res = new ArrayList<Case>();
+    	if(start != null) {
+    		if((j < largeur-1) && cases[i][j+1] != null) {
+    			res.add(cases[i][j+1]);
+    		}
+    		if((i < hauteur-1) && cases[i+1][j] != null) {
+    			res.add(cases[i+1][j]);
+    		}
+    		if((j > 0) && cases[i][j-1] != null) {
+    			res.add(cases[i][j-1]);
+    		}
+    		if((i > 0) && cases[i-1][j] != null) {
     			res.add(cases[i-1][j]);
     		}
     	}
@@ -366,6 +387,10 @@ public class Tableau extends Plateau {
                 break;
         }
         return c;
+	}
+	
+	public static int getOccCase(Case c) {
+		return Collections.frequency(listeCases, c);
 	}
     
     /*************************/
