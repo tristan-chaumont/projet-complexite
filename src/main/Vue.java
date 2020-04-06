@@ -40,15 +40,15 @@ public class Vue extends JFrame {
         	graphe.contientCycle();
             fin = System.currentTimeMillis();
 
+            System.out.println("Nombre de circuits trouvé : " + graphe.getCircuits().size());
+        	System.out.println("Taille du circuit le plus long : " + graphe.getCircuits().stream().mapToInt(ArrayList::size).max().orElse(0));
+            graphe.getCircuits().forEach(s -> System.out.println(String.format("Taille du circuit %d : %d", graphe.getCircuits().indexOf(s) + 1, s.size())));
+
             // SET CIRCUIT MAX
             Optional<ArrayList<Sommet>> optionalCircuit = graphe.getCircuits().stream().max(Comparator.comparingInt(ArrayList::size));
             circuitMax = optionalCircuit.orElseGet(ArrayList::new);
             circuits = graphe.getCircuits();
             circuits.remove(circuitMax);
-
-            System.out.println("Nombre de circuits trouvé : " + graphe.getCircuits().size());
-        	System.out.println("Taille du circuit le plus long : " + graphe.getCircuits().stream().mapToInt(ArrayList::size).max().orElse(0));
-            graphe.getCircuits().forEach(s -> System.out.println(String.format("Taille du circuit %d : %d", graphe.getCircuits().indexOf(s) + 1, s.size())));
         }
 
         grid = new GridLayout(plateau.getHauteur(), plateau.getLargeur());

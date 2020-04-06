@@ -99,7 +99,8 @@ public class Sommet extends Cellule {
     }
 
     public void setVisited() {
-        visited = true;
+        if (!visited)
+            visited = true;
     }
 
     public boolean isVisited() {
