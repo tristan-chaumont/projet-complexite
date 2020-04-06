@@ -24,8 +24,9 @@ public class Vue extends JFrame {
     private JPanel panel;
     private GridLayout grid;
     
-    private ArrayList<Case> cycle;
+    private ArrayList<Case> cycleMax;
     private ArrayList<Sommet> circuitMax;
+    private ArrayList<ArrayList<Case>> cycles;
     private ArrayList<ArrayList<Sommet>> circuits;
 
     public Vue(Plateau plateau) throws IOException, ConnectException {
@@ -33,7 +34,13 @@ public class Vue extends JFrame {
         long debut = System.currentTimeMillis(), fin = 0;
         if(plateau instanceof Tableau) {
         	Tableau.backtrack(null, 0, 0, false);
-        	cycle = ((Tableau) plateau).getMeilleurCycle();
+        	cycleMax = ((Tableau) plateau).getMeilleurCycle();
+        	
+        	Tableau.verifieListes(cycleMax);
+        	
+        	cycles = ((Tableau) plateau).getListeCycle();
+        	cycles.remove(cycleMax);
+        	
             fin = System.currentTimeMillis();
         }else {
             Graphe graphe = (Graphe) plateau;
@@ -160,19 +167,19 @@ public class Vue extends JFrame {
 
         switch (c.getType()) {
             case CROIX:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/croix_max.png" : "sprites/croix_vide.png"));
+                return ImageIO.read(new File(cycleMax.contains(c) ? "sprites/croix_max.png" : Tableau.contientCase(cycles,c) ? "sprites/croix_plein.png" : "sprites/croix_vide.png"));
             case VERTICAL:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/vertical_max.png" : "sprites/vertical_vide.png"));
+                return ImageIO.read(new File(cycleMax.contains(c) ? "sprites/vertical_max.png" : Tableau.contientCase(cycles,c) ? "sprites/vertical_plein.png" : "sprites/vertical_vide.png"));
             case HORIZONTAL:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/horizontal_max.png" : "sprites/horizontal_vide.png"));
+                return ImageIO.read(new File(cycleMax.contains(c) ? "sprites/horizontal_max.png" : Tableau.contientCase(cycles,c) ? "sprites/horizontal_plein.png" : "sprites/horizontal_vide.png"));
             case ANGLE_HAUT_DROITE:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_haut_droite_max.png" : "sprites/angle_haut_droite_vide.png"));
+                return ImageIO.read(new File(cycleMax.contains(c) ? "sprites/angle_haut_droite_max.png" : Tableau.contientCase(cycles,c) ? "sprites/angle_haut_droite_plein.png" : "sprites/angle_haut_droite_vide.png"));
             case ANGLE_BAS_DROITE:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_bas_droite_max.png" : "sprites/angle_bas_droite_vide.png"));
+                return ImageIO.read(new File(cycleMax.contains(c) ? "sprites/angle_bas_droite_max.png" : Tableau.contientCase(cycles,c) ? "sprites/angle_bas_droite_plein.png" : "sprites/angle_bas_droite_vide.png"));
             case ANGLE_HAUT_GAUCHE:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_haut_gauche_max.png" : "sprites/angle_haut_gauche_vide.png"));
+                return ImageIO.read(new File(cycleMax.contains(c) ? "sprites/angle_haut_gauche_max.png" : Tableau.contientCase(cycles,c) ? "sprites/angle_haut_gauche_plein.png" : "sprites/angle_haut_gauche_vide.png"));
             case ANGLE_BAS_GAUCHE:
-                return ImageIO.read(new File(cycle.contains(c) ? "sprites/angle_bas_gauche_max.png" : "sprites/angle_bas_gauche_vide.png"));
+                return ImageIO.read(new File(cycleMax.contains(c) ? "sprites/angle_bas_gauche_max.png" : Tableau.contientCase(cycles,c) ? "sprites/angle_bas_gauche_plein.png" : "sprites/angle_bas_gauche_vide.png"));
             default:
                 return ImageIO.read(new File("sprites/blanc.png"));
         }

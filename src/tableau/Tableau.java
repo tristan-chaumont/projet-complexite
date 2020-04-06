@@ -218,9 +218,10 @@ public class Tableau extends Plateau {
 				
 				//On vérifie que si c'est une croix, tout les branches soit occupées
 				ArrayList<Integer> ind = getIndexes(possibilites.get(k));
-				ArrayList<Case> possibilitesC1 = getNumConnexions(start, ind.get(0), ind.get(1));
+				ArrayList<Case> possibilitesC1 = getNumConnexions(start, cases[i][j], ind.get(0), ind.get(1));
+				System.out.println(possibilitesC1.size());
 				
-				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || (possibilites.get(k).getType() == Type.CROIX && possibilitesC1.size() == 4 && getOccCase(possibilites.get(k)) <= 2)) {
+				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || (possibilites.get(k).getType() == Type.CROIX && possibilitesC1.size() == 4 && getOccCase(possibilites.get(k)) <= 4)) {
 					listeCases.add(possibilites.get(k));
 					possibilites.get(k).setCaseCompte();
 					estPasse = true;
@@ -257,7 +258,7 @@ public class Tableau extends Plateau {
      * @return
      * 			le meilleur cycle
      */
-    public ArrayList<Case> getMeilleurCycle() {
+    public static ArrayList<Case> getMeilleurCycle() {
     	if(!listeCycle.isEmpty()) {
     		ArrayList<Case> listCases = listeCycle.get(0);
         	for(int i = 1; i < listeCycle.size(); i++) {
@@ -309,7 +310,8 @@ public class Tableau extends Plateau {
 	}
 	
 	/**
-	 * Methode permettant d'obtenir le nombres de connexions d'une case
+	 * Méthode getNumConnexionsStrict
+	 * Permet d'obtenir le nombres de connexions d'une case en tenant compte des restrictions
 	 * @param i
 	 * 			Index hauteur
 	 * @param j
@@ -337,20 +339,34 @@ public class Tableau extends Plateau {
     	return res;
     }
 	
-	public static ArrayList<Case> getNumConnexions(Case start, int i, int j) {
+	/**
+	 * Méthode getNumConnexionsStrict
+	 * Permet d'obtenir le nombres de connexions d'une case sans tenir compte des restrictions
+	 * @param i
+	 * 			Index hauteur
+	 * @param j
+	 * 			Index largeur
+	 * @return
+	 * 			La liste de case adjacente
+	 */
+	public static ArrayList<Case> getNumConnexions(Case start, Case prec, int i, int j) {
     	ArrayList<Case> res = new ArrayList<Case>();
     	if(start != null) {
     		if((j < largeur-1) && cases[i][j+1] != null) {
-    			res.add(cases[i][j+1]);
+    			if(contientCase(listeCycle, cases[i][j+1]) || listeCases.contains(cases[i][j+1]) ||!cases[i][j+1].estCompte() || cases[i][j+1] == prec)
+    				res.add(cases[i][j+1]);
     		}
     		if((i < hauteur-1) && cases[i+1][j] != null) {
-    			res.add(cases[i+1][j]);
+    			if(contientCase(listeCycle, cases[i+1][j]) || listeCases.contains(cases[i+1][j]) || !cases[i+1][j].estCompte() || cases[i+1][j] == prec)
+    				res.add(cases[i+1][j]);
     		}
     		if((j > 0) && cases[i][j-1] != null) {
-    			res.add(cases[i][j-1]);
+    			if(contientCase(listeCycle, cases[i][j-1]) || listeCases.contains(cases[i][j-1]) || !cases[i][j-1].estCompte() || cases[i][j-1] == prec)
+    				res.add(cases[i][j-1]);
     		}
     		if((i > 0) && cases[i-1][j] != null) {
-    			res.add(cases[i-1][j]);
+    			if(contientCase(listeCycle, cases[i-1][j]) || listeCases.contains(cases[i-1][j]) || !cases[i-1][j].estCompte() || cases[i-1][j] == prec)
+    				res.add(cases[i-1][j]);
     		}
     	}
     	
@@ -389,9 +405,54 @@ public class Tableau extends Plateau {
         return c;
 	}
 	
+	/**
+	 * Méthode getOccCase
+	 * @param c
+	 * 			Case
+	 * @return
+	 * 			le nombre d'occurences de la case c dans la liste
+	 */
 	public static int getOccCase(Case c) {
 		return Collections.frequency(listeCases, c);
 	}
+	
+	/**
+	 * Méthode verifieListes
+	 * Permet de vérifier les différente listes
+	 * Si une case apparait dans deux liste, alors on fusionne les deux listes
+	 * @param best
+	 * 				Meilleur cycle
+	 */
+	
+	public static void verifieListes(ArrayList<Case> best) {
+		boolean stop;
+		for(int i = 0; i < listeCycle.size(); i++) {
+			stop = false;
+			ArrayList<Case> lc = listeCycle.get(i);
+			for(int j = 0; j < best.size(); j++) {
+				if(lc.contains(best.get(j)) && !stop) {
+					best.addAll(lc);
+					stop = true;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Méthode contientCase
+	 * @param cycles
+	 * 			Liste de cycles
+	 * @param c
+	 * 			Case
+	 * @return
+	 * 			Vrai si la case est dans un des cycles
+	 */
+	public static boolean contientCase(ArrayList<ArrayList<Case>> cycles, Case c) {
+        for (ArrayList<Case> cycle: cycles) {
+            if (cycle.contains(c)) return true;
+        }
+        return false;
+    }
     
     /*************************/
    /****GETTERS & SETTERS****/
