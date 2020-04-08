@@ -108,7 +108,7 @@ fin
 
 #### setAllVisited() 
 
-> Si le circuit est imparfait, on passe tous les sommets de ce circuit à "visited". Cela évite de repasser dessus par la suite.
+> Si le circuit est imparfait, on passe tous les sommets de ce circuit à "visité". Cela évite de repasser dessus par la suite.
 
 ```java
 → listeSommets: liste de tous les sommets du plateau
@@ -122,7 +122,7 @@ debut
 	
 	pour chaque sommet s dans sommet.voisins faire
 		si visited[listeSommets.getIndex(sommet)] = faux alors
-			s.estVisite ← faux
+			s.estVisite ← vrai
 			setAllVisited(s, visited)
 		fsi
 	fpour
