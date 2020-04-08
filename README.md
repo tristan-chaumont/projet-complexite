@@ -19,7 +19,7 @@
 
 > Méthode helper qui détecte s'il existe un cycle en partant d'un sommet.
 
-```
+```java
 → listeSommets: liste de tous les sommets du plateau
 → sommet: sommet à partir duquel on cherche un cycle
 → visited: tableau de booléens qui indique si un sommet a déjà été visité
@@ -31,8 +31,8 @@ debut
 	// Si le sommet est une CROIX et qu'elle n'a pas 4 voisins, ce n'est pas un circuit parfait. On retourne false.
         // Si le sommet n'est pas une croix et qu'il n'a pas pas 2 voisins, ce n'est pas non plus un circuit parfait.
 	si (sommet.type = CROIX et sommet.voisins.length < 4 ou sommet.voisins.length < 2) et sommet.type != BLANC faire
-		setAllVisited(sommet, visited)
-		réinitialiser la liste pre
+		setAllVisited(listeSommets, sommet, visited)
+		réinitialisation de la liste pre
 		res ← faux
 	fsi
 	
@@ -64,19 +64,67 @@ debut
 			// Récurrence, on récupère la valeur du cycle
 			value ← contientCycleUtil(listeSommets, s, visited, sommet, pre)
 			
-			si value = true alors
+			si value = vrai alors
 				 // On a déjà trouvé le cycle, donc on arrête l'algorithme
 				 pre.ajouter(s)
-				 res ← true
+				 res ← vrai
 			fsi
 			
 		// Si le sommet adjacent a été visité et que ce n'est pas un parent du sommet actuel, alors il y a un cycle.
             	sinon si s != parent alors
 			// On l'ajoute dans la liste des prédecesseurs
                 	pre.ajouter(s)
-                	res ← true
+                	res ← vrai
 		fsi
 	fpour
 	res ← faux
+fin
+```
+
+#### contientCycle() 
+
+> Détecte tous les cycles du plateau
+
+```java
+→ listeSommets: liste de tous les sommets du plateau
+
+debut
+	visited ← tableau de booléens de taille listeSommets.length
+	initialisation de la liste pre
+	
+	// Liste "circuits" qui contient tous les cycles trouvés dans le plateau
+	initialisation de la liste circuits
+	
+	pour i de 0 à visited.length - 1 faire
+		si visited[i] = faux alors
+			si contientCycleUtil(listeSommets, listeSommets[i], visited, null, pre) = vrai alors
+				circuits.ajouter(pre)
+			fsi
+		fsi
+		réinitialisation de la liste pre
+	fpour
+fin
+```
+
+#### setAllVisited() 
+
+> Si le circuit est imparfait, on passe tous les sommets de ce circuit à "visited". Cela évite de repasser dessus par la suite.
+
+```java
+→ listeSommets: liste de tous les sommets du plateau
+→ sommet: sommet à partir duquel on cherche un cycle
+→ visited: tableau de booléens qui indique si un sommet a déjà été visité
+
+debut
+	si visited[listeSommets.getIndex(sommet)] = faux alors
+		visited[listeSommets.getIndex(sommet)] ← vrai
+	fsi
+	
+	pour chaque sommet s dans sommet.voisins faire
+		si visited[listeSommets.getIndex(sommet)] = faux alors
+			s.estVisite ← faux
+			setAllVisited(s, visited)
+		fsi
+	fpour
 fin
 ```
