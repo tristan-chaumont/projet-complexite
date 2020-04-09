@@ -132,7 +132,7 @@ public class Global {
     public static Plateau genererPlateauPrefait(String fileName, String classe) {
         Plateau plateau = null;
         try {
-            FileReader fileReader = new FileReader("plateauxPrefaits/" + fileName);
+            FileReader fileReader = new FileReader("plateaux/" + fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = "";
             int count = 0;
@@ -158,6 +158,9 @@ public class Global {
             }
             bufferedReader.close();
             fileReader.close();
+        } catch(FileNotFoundException fe) {
+            System.out.println("File not found. Please check its path or name.");
+            System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
         }

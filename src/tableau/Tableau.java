@@ -199,10 +199,12 @@ public class Tableau extends Plateau {
 				start = getFirstNonMarque();
 				cases[i][j].setCaseCompte();
 				
-				ArrayList<Integer> indexes = getIndexes(start);
-				
-				if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), true)) {
-					return true;
+				if(start != null) {
+					ArrayList<Integer> indexes = getIndexes(start);
+					
+					if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), true)) {
+						return true;
+					}
 				}
 			}
 		}
