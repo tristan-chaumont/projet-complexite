@@ -81,7 +81,7 @@ public class Vue extends JFrame {
             width = plateau.getLargeur() * 50;
             height = plateau.getHauteur() * 50;
         }
-        
+
         setMinimumSize(new Dimension(width, height));
     }
 
