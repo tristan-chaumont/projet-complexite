@@ -2,6 +2,8 @@ package plateau;
 
 import main.Cellule;
 import static main.Global.*;
+
+import main.ConnectException;
 import main.Plateau;
 import tableau.Tableau;
 
@@ -10,6 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /**
@@ -128,14 +131,13 @@ public class Graphe extends Plateau {
     }
 
     /**
-     * Détecte s'il y a un cycle.
+     * Retourne le plus long cycle du plateau s'il y en a un, sinon retourne une liste vide.
      * @return
      *      true s'il y a un cycle, false sinon.
      */
-    public boolean contientCycle() {
+    public ArrayList<Sommet> contientCycle() {
         // Tableau des sommets visités. Initialement tous à false.
         boolean[] visited = new boolean[sommets.size()];
-        boolean containCycle = false;
 
         // Utilise l'algo DFS (Depth First Search) pour détecter les cycles.
         for (int i = 0; i < visited.length; i++) {
@@ -143,12 +145,11 @@ public class Graphe extends Plateau {
             if (!visited[i])
                 if (contientCycleUtil(sommets.get(i), visited, null)) {
                     circuits.add(pre);
-                    containCycle = true;
                 }
             pre = new ArrayList<>();
         }
 
-        return containCycle;
+        return circuits.stream().max(Comparator.comparingInt(ArrayList::size)).orElseGet(ArrayList::new);
     }
 
     /**

@@ -44,16 +44,14 @@ public class Vue extends JFrame {
             fin = System.currentTimeMillis();
         }else {
             Graphe graphe = (Graphe) plateau;
-        	graphe.contientCycle();
+        	circuitMax = graphe.contientCycle();
             fin = System.currentTimeMillis();
 
             System.out.println("Nombre de circuits trouvé : " + graphe.getCircuits().size());
-        	System.out.println("Taille du circuit le plus long : " + graphe.getCircuits().stream().mapToInt(ArrayList::size).max().orElse(0));
+        	System.out.println("Taille du circuit le plus long : " + circuitMax.size());
             graphe.getCircuits().forEach(s -> System.out.println(String.format("Taille du circuit %d : %d", graphe.getCircuits().indexOf(s) + 1, s.size())));
 
             // SET CIRCUIT MAX
-            Optional<ArrayList<Sommet>> optionalCircuit = graphe.getCircuits().stream().max(Comparator.comparingInt(ArrayList::size));
-            circuitMax = optionalCircuit.orElseGet(ArrayList::new);
             circuits = graphe.getCircuits();
             circuits.remove(circuitMax);
         }

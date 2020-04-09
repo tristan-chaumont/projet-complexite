@@ -158,6 +158,9 @@ public class Global {
             }
             bufferedReader.close();
             fileReader.close();
+        } catch(FileNotFoundException fe) {
+            System.out.println("File not found. Please check its path or name.");
+            System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
         }
