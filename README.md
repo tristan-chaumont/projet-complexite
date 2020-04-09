@@ -87,6 +87,7 @@ fin
 
 ```java
 → listeSommets: liste de tous les sommets du plateau
+← res: circuit le plus long du plateau
 
 debut
 	visited ← tableau de booléens de taille listeSommets.length
@@ -103,6 +104,8 @@ debut
 		fsi
 		réinitialisation de la liste pre
 	fpour
+	
+	res ← max de la liste circuits
 fin
 ```
 
