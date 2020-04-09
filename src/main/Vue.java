@@ -29,7 +29,7 @@ public class Vue extends JFrame {
     private ArrayList<ArrayList<Case>> cycles;
     private ArrayList<ArrayList<Sommet>> circuits;
 
-    public Vue(Plateau plateau) throws IOException, ConnectException {
+    public Vue(Plateau plateau) throws IOException {
         this.plateau = plateau;
         long debut = System.currentTimeMillis(), fin = 0;
         if(plateau instanceof Tableau) {
@@ -85,7 +85,7 @@ public class Vue extends JFrame {
         setMinimumSize(new Dimension(width, height));
     }
 
-    public void addImagesAndBorder() throws IOException, ConnectException {
+    public void addImagesAndBorder() throws IOException {
         for (int i = 0; i < plateau.getHauteur(); i++) {
             for (int j = 0; j < plateau.getLargeur(); j++) {
 
@@ -126,7 +126,7 @@ public class Vue extends JFrame {
      * @throws IOException
      *      Si le fichier est introuvable.
      */
-    public BufferedImage getUrl(Sommet sommet) throws IOException, ConnectException {
+    public BufferedImage getUrl(Sommet sommet) throws IOException {
         if(sommet == null)
             return ImageIO.read(new File("sprites/blanc.png"));
 

@@ -132,7 +132,7 @@ public class Global {
     public static Plateau genererPlateauPrefait(String fileName, String classe) {
         Plateau plateau = null;
         try {
-            FileReader fileReader = new FileReader("plateauxPrefaits/" + fileName);
+            FileReader fileReader = new FileReader("plateaux/" + fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line = "";
             int count = 0;
