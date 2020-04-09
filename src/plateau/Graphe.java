@@ -51,17 +51,14 @@ public class Graphe extends Plateau {
      * Si le circuit est imparfait, on passe tous les sommets de ce circuit à "visited".
      * Cela évite de repasser dessus par la suite.
      * @param sommet
-     *      Sommet à partir duquel le circuit a été trouvé imparfait.
-     * @param visited
      *
      */
-    public void setAllVisited(Sommet sommet, boolean[] visited) {
-        if (!visited[sommets.indexOf(sommet)]) {
-            visited[sommets.indexOf(sommet)] = true;
+    public void setAllVisited(Sommet sommet) {
+        if (!sommet.isVisited()) {
+            sommet.setVisited();
             for (Sommet s : sommet.getAdjacents()) {
-                if (!visited[sommets.indexOf(s)]) {
-                    s.setVisited();
-                    setAllVisited(s, visited);
+                if (!s.isVisited()) {
+                    setAllVisited(s);
                 }
             }
         }
@@ -70,25 +67,23 @@ public class Graphe extends Plateau {
     /**
      * Méthode helper qui détecte s'il existe un sous-graphe qui peut être atteint depuis le Sommet "sommet".
      * @param sommet
-     *      Sommet du quel on part pour détecter un cycle.
-     * @param visited
      *      Tableau des sommets déjà visités.
      * @param parent
      *      Parent du sommet courant.
      * @return
      *      true s'il existe un cycle, false sinon.
      */
-    private boolean contientCycleUtil(Sommet sommet, boolean[] visited, Sommet parent) {
+    private boolean contientCycleUtil(Sommet sommet, Sommet parent) {
         // Si le sommet est une CROIX et qu'elle n'a pas 4 voisins, ce n'est pas un circuit parfait. On retourne false.
         // Ou si le sommet n'a pas 2 voisins, ce n'est pas non plus un circuit parfait. On retourne false.
-        if (((sommet.getType().equals(Type.CROIX) && sommet.getAdjacents().size() < 4) || sommet.getAdjacents().size() < 2) && !sommet.getType().equals(Type.BLANC)) {
-            setAllVisited(sommet, visited);
+        if (((sommet.getType().equals(Type.CROIX) && sommet.getAdjacents().size() < 4) || (!sommet.getType().equals(Type.CROIX) && sommet.getAdjacents().size() < 2))
+                && !sommet.getType().equals(Type.BLANC)) {
+            setAllVisited(sommet);
             pre = new ArrayList<>();
             return false;
         }
 
         // Marque le sommet courant comme visité
-        visited[sommets.indexOf(sommet)] = true;
         sommet.setVisited();
 
         // Si le sommet est une CROIX alors, pour chacun de ses sommets adjacents, on essaie de trouver un cycle.
@@ -100,7 +95,7 @@ public class Graphe extends Plateau {
             for (Sommet adjacent: nonVisites) {
                 if (!adjacent.isVisited()) {
                     pre.add(adjacent);
-                    if (!contientCycleUtil(adjacent, visited, sommet)) {
+                    if (!contientCycleUtil(adjacent, sommet)) {
                         return false;
                     }
                 }
@@ -111,9 +106,9 @@ public class Graphe extends Plateau {
         // Pour tous les sommets adjacents au sommet courant
         for (Sommet s : sommet.getAdjacents()) {
             // Si le noeud adjacent n'a pas été visité, alors on réexécute la méthode sur ce nouveau sommet
-            if (!visited[sommets.indexOf(s)]) {
+            if (!s.isVisited()) {
                 // Récurrence, on récupère la valeur du cycle
-                boolean value = contientCycleUtil(s, visited, sommet);
+                boolean value = contientCycleUtil(s, sommet);
 
                 if (value) {
                     // On a déjà trouvé le cycle, donc on arrête l'algorithme.
@@ -121,7 +116,7 @@ public class Graphe extends Plateau {
                     return true;
                 }
             // Si le sommet adjacent a été visité et que ce n'est pas un parent du sommet actuel, alors il y a un cycle.
-            } else if (!s.equals(parent)) {
+            } else if (!s.equals(parent) && parent != null) {
                 // On l'ajoute dans la liste des prédecesseurs.
                 pre.add(s);
                 return true;
@@ -136,14 +131,11 @@ public class Graphe extends Plateau {
      *      true s'il y a un cycle, false sinon.
      */
     public ArrayList<Sommet> contientCycle() {
-        // Tableau des sommets visités. Initialement tous à false.
-        boolean[] visited = new boolean[sommets.size()];
-
         // Utilise l'algo DFS (Depth First Search) pour détecter les cycles.
-        for (int i = 0; i < visited.length; i++) {
+        for (Sommet sommet : sommets) {
             // On n'exécute pas la méthode helper si le chemin a déjà été visité.
-            if (!visited[i])
-                if (contientCycleUtil(sommets.get(i), visited, null)) {
+            if (!sommet.isVisited())
+                if (contientCycleUtil(sommet, null)) {
                     circuits.add(pre);
                 }
             pre = new ArrayList<>();
