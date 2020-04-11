@@ -26,10 +26,14 @@ public class Graphe extends Plateau {
      */
     public ArrayList<Sommet> sommets;
 
+    /**
+     * Liste des sommets appartenant au potentiel cycle actuel.
+     */
     public ArrayList<Sommet> pre;
 
-    public Sommet finCycle;
-
+    /**
+     * Circuits actuellement trouvés.
+     */
     public ArrayList<ArrayList<Sommet>> circuits;
 
     public Graphe(int hauteur, int largeur) {
@@ -37,21 +41,13 @@ public class Graphe extends Plateau {
         sommets = new ArrayList<>();
         pre = new ArrayList<>();
         circuits = new ArrayList<>();
-        finCycle = null;
-    }
-
-    public Graphe() {
-        super(0, 0);
-        sommets = new ArrayList<>();
-        pre = new ArrayList<>();
-        finCycle = null;
     }
 
     /**
      * Si le circuit est imparfait, on passe tous les sommets de ce circuit à "visited".
      * Cela évite de repasser dessus par la suite.
      * @param sommet
-     *
+     *      Sommet à partir duquel on veut set tous les voisins à "visité".
      */
     public void setAllVisited(Sommet sommet) {
         if (!sommet.isVisited()) {
@@ -248,11 +244,15 @@ public class Graphe extends Plateau {
         return sommets.stream().filter(s -> s.getX() == x && s.getY() == y).findFirst().orElse(null);
     }
 
-    public ArrayList<Sommet> getPre() {
-        return pre;
-    }
-
     public ArrayList<ArrayList<Sommet>> getCircuits() {
         return circuits;
+    }
+
+    public void resetAll() {
+        pre = new ArrayList<>();
+        circuits = new ArrayList<>();
+        for (Sommet sommet: sommets) {
+            sommet.setUnvisited();
+        }
     }
 }

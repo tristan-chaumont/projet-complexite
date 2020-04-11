@@ -31,7 +31,7 @@ public class Vue extends JFrame {
 
     public Vue(Plateau plateau) throws IOException {
         this.plateau = plateau;
-        long debut = System.currentTimeMillis(), fin = 0;
+        long debut = System.currentTimeMillis(), fin;
         if(plateau instanceof Tableau) {
         	Tableau.backtrack(null, 0, 0, false);
         	cycleMax = ((Tableau) plateau).getMeilleurCycle();
@@ -44,7 +44,7 @@ public class Vue extends JFrame {
             fin = System.currentTimeMillis();
         }else {
             Graphe graphe = (Graphe) plateau;
-        	circuitMax = graphe.contientCycle();
+        	circuitMax = graphe.contientCycle(); // ALGO DE RECHERCHE
             fin = System.currentTimeMillis();
 
             System.out.println("Nombre de circuits trouvé : " + graphe.getCircuits().size());
