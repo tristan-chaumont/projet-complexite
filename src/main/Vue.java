@@ -29,9 +29,9 @@ public class Vue extends JFrame {
     private ArrayList<ArrayList<Case>> cycles;
     private ArrayList<ArrayList<Sommet>> circuits;
 
-    public Vue(Plateau plateau) throws IOException, ConnectException {
+    public Vue(Plateau plateau) throws IOException {
         this.plateau = plateau;
-        long debut = System.currentTimeMillis(), fin = 0;
+        long debut = System.currentTimeMillis(), fin;
         if(plateau instanceof Tableau) {
         	Tableau.backtrack(null, 0, 0, false);
         	cycleMax = ((Tableau) plateau).getMeilleurCycle();
@@ -44,16 +44,14 @@ public class Vue extends JFrame {
             fin = System.currentTimeMillis();
         }else {
             Graphe graphe = (Graphe) plateau;
-        	graphe.contientCycle();
+        	circuitMax = graphe.contientCycle(); // ALGO DE RECHERCHE
             fin = System.currentTimeMillis();
 
             System.out.println("Nombre de circuits trouvé : " + graphe.getCircuits().size());
-        	System.out.println("Taille du circuit le plus long : " + graphe.getCircuits().stream().mapToInt(ArrayList::size).max().orElse(0));
+        	System.out.println("Taille du circuit le plus long : " + circuitMax.size());
             graphe.getCircuits().forEach(s -> System.out.println(String.format("Taille du circuit %d : %d", graphe.getCircuits().indexOf(s) + 1, s.size())));
 
             // SET CIRCUIT MAX
-            Optional<ArrayList<Sommet>> optionalCircuit = graphe.getCircuits().stream().max(Comparator.comparingInt(ArrayList::size));
-            circuitMax = optionalCircuit.orElseGet(ArrayList::new);
             circuits = graphe.getCircuits();
             circuits.remove(circuitMax);
         }
@@ -83,11 +81,11 @@ public class Vue extends JFrame {
             width = plateau.getLargeur() * 50;
             height = plateau.getHauteur() * 50;
         }
-        
+
         setMinimumSize(new Dimension(width, height));
     }
 
-    public void addImagesAndBorder() throws IOException, ConnectException {
+    public void addImagesAndBorder() throws IOException {
         for (int i = 0; i < plateau.getHauteur(); i++) {
             for (int j = 0; j < plateau.getLargeur(); j++) {
 
@@ -128,7 +126,7 @@ public class Vue extends JFrame {
      * @throws IOException
      *      Si le fichier est introuvable.
      */
-    public BufferedImage getUrl(Sommet sommet) throws IOException, ConnectException {
+    public BufferedImage getUrl(Sommet sommet) throws IOException {
         if(sommet == null)
             return ImageIO.read(new File("sprites/blanc.png"));
 

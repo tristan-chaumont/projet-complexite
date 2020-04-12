@@ -103,6 +103,11 @@ public class Sommet extends Cellule {
             visited = true;
     }
 
+    public void setUnvisited() {
+        if (visited)
+            visited = false;
+    }
+
     public boolean isVisited() {
         return visited;
     }

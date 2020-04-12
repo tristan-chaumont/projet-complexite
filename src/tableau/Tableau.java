@@ -179,7 +179,6 @@ public class Tableau extends Plateau {
 	 * 			Boolean
 	 */
     public static boolean backtrack(Case prec, int i, int j, boolean affect) {
-    	System.out.println(i +";" +j);
 		boolean estPasse = false;
 		
 		//Si la case de début n'est pas initialisée
@@ -200,10 +199,12 @@ public class Tableau extends Plateau {
 				start = getFirstNonMarque();
 				cases[i][j].setCaseCompte();
 				
-				ArrayList<Integer> indexes = getIndexes(start);
-				
-				if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), true)) {
-					return true;
+				if(start != null) {
+					ArrayList<Integer> indexes = getIndexes(start);
+					
+					if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), true)) {
+						return true;
+					}
 				}
 			}
 		}
@@ -219,7 +220,6 @@ public class Tableau extends Plateau {
 				//On vérifie que si c'est une croix, tout les branches soit occupées
 				ArrayList<Integer> ind = getIndexes(possibilites.get(k));
 				ArrayList<Case> possibilitesC1 = getNumConnexions(start, cases[i][j], ind.get(0), ind.get(1));
-				System.out.println(possibilitesC1.size());
 				
 				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || (possibilites.get(k).getType() == Type.CROIX && possibilitesC1.size() == 4 && getOccCase(possibilites.get(k)) <= 4)) {
 					listeCases.add(possibilites.get(k));
@@ -281,14 +281,8 @@ public class Tableau extends Plateau {
 	 */
 	public static ArrayList<Integer> getIndexes(Case c){
 		ArrayList<Integer> res = new ArrayList<Integer>();
-		for(int i = 0; i < hauteur; i++) {
-			for(int j = 0; j < largeur; j++) {
-				if(cases[i][j] == c) {
-					res.add(i);
-					res.add(j);
-				}
-			}
-		}
+		res.add(c.getX());
+		res.add(c.getY());
 		return res;
 	}
 	
