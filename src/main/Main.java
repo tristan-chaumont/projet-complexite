@@ -104,6 +104,7 @@ public class Main {
                 case 2:
                     Tableau.backtrack(null, 0, 0, false);
                     fin = System.nanoTime();
+                    Tableau.reset();
                     break;
                 default:
                     fin = System.nanoTime();
