@@ -453,6 +453,23 @@ public class Tableau extends Plateau {
         }
         return false;
     }
+	
+	/**
+	 * Méthode reset
+	 * Permet de reset
+	 */
+	
+	public static void reset() {
+		start = null;
+		listeCases = new ArrayList<Case>();
+		listeCycle = new ArrayList<ArrayList<Case>>();
+		
+		for(int i = 0; i < hauteur; i++) {
+			for(int j = 0; j < largeur; j++) {
+				cases[i][j].setCaseNotCompte();
+			}
+		}
+	}
     
     /*************************/
    /****GETTERS & SETTERS****/

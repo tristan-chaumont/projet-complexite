@@ -142,6 +142,10 @@ public class Case extends Cellule {
 		this.compte = true;
 	}
 	
+	public void setCaseNotCompte() {
+		this.compte = false;
+	}
+	
 	public boolean estCompte() {
 		return this.compte;
 	}
