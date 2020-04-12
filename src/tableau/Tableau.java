@@ -89,80 +89,6 @@ public class Tableau extends Plateau {
         	}
     	}
     }
-
-	/**
-	 * Methode getCycles
-	 * Permet d'obtenir la liste des différents cycles trouvés
-	 * @return
-	 * 			la liste des cycles trouvés
-	 * @throws Exception 
-	 */
-    /*
-    public ArrayList<ArrayList<Case>> getCycles() throws Exception {
-    	ArrayList<ArrayList<Case>> listCycles = new ArrayList<ArrayList<Case>>();
-    	ArrayList<Case> listCases = new ArrayList<Case>();
-    	
-    	Case start;
-    	boolean continu = false;
-    	String last = "";
-    	
-    	for(int i = 0; i < hauteur; i++) {
-    		for(int j = 0; j < largeur; j++) {
-    			if((!continu) && (cases[i][j].getType() != Type.BLANC) && (cases[i][j].estCompte() == false)) {
-    				continu = true;
-    				start = cases[i][j];
-    				cases[i][j].setCaseCompte();
-    				
-    				while(continu) {
-    					//System.out.println("(" +i +";" +j +")");
-    					if((j < largeur-1) && (cases[i][j].caseCorrect(cases[i][j+1], "Droite")) && (last != "Gauche") && (cases[i][j+1].estCompte() == false || cases[i][j+1] == start)) {
-    						cases[i][j+1].setCaseCompte();
-    						j++;
-    						last = "Droite";
-    						
-    						listCases.add(cases[i][j]);
-    					}else if((i < hauteur-1) && (cases[i][j].caseCorrect(cases[i+1][j], "Bas")) && (last != "Haut") && (cases[i+1][j].estCompte() == false || cases[i+1][j] == start)) {
-    						cases[i+1][j].setCaseCompte();
-    						i++;
-    						last = "Bas";
-    						
-    						listCases.add(cases[i][j]);
-    					}else if((j > 0) && (cases[i][j].caseCorrect(cases[i][j-1], "Gauche")) && (last != "Droite") && (cases[i][j-1].estCompte() == false || cases[i][j-1] == start)) {
-    						cases[i][j-1].setCaseCompte();
-							j--;
-							last = "Gauche";
-							
-							listCases.add(cases[i][j]);
-    					}else if((i > 0) && (cases[i][j].caseCorrect(cases[i-1][j], "Haut")) && (last != "Bas") && (cases[i-1][j].estCompte() == false || cases[i-1][j] == start)) {
-    						cases[i-1][j].setCaseCompte();
-    						i--;
-    						last = "Haut";
-    						
-    						listCases.add(cases[i][j]);
-    					}else {
-    						continu = false;
-    						i = 0; j = 0;
-    						ArrayList<Case> contains = this.containsCase(listCases);
-    						if(contains == null) {
-    							listCases = new ArrayList<Case>();
-    						}else {
-    							listCycles.add(listCases);
-        						listCases = new ArrayList<Case>();
-    						}
-    					}
-    					
-    					if((cases[i][j] == start) && (listCases.size() >= 4)) {
-    						System.out.println(listCases);
-    						listCycles.add(listCases);
-    						listCases = new ArrayList<Case>();
-    						continu = false;
-    					}
-    				}
-    			}
-    		}
-    	}
-    	return listCycles;
-    }*/
     
 	/**
 	 * Methodé backtrack
@@ -401,6 +327,7 @@ public class Tableau extends Plateau {
 	
 	/**
 	 * Méthode getOccCase
+	 * Permet d'obtenir le nombre d'occurrences de la case c dans la liste de cases
 	 * @param c
 	 * 			Case
 	 * @return
