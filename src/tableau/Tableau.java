@@ -29,11 +29,11 @@ public class Tableau extends Plateau {
 	/**
 	 * Liste de cases constituant un cycle
 	 */
-	private static ArrayList<Case> listeCases = new ArrayList<Case>();
+	private static ArrayList<Case> listeCases = new ArrayList<>();
 	/**
 	 * Liste de cycle trouvés
 	 */
-	private static ArrayList<ArrayList<Case>> listeCycle = new ArrayList<ArrayList<Case>>();
+	private static ArrayList<ArrayList<Case>> listeCycle = new ArrayList<>();
     
     /**
      * Constructeur
@@ -406,8 +406,8 @@ public class Tableau extends Plateau {
 	
 	public static void reset() {
 		start = null;
-		listeCases = new ArrayList<Case>();
-		listeCycle = new ArrayList<ArrayList<Case>>();
+		listeCases = new ArrayList<>();
+		listeCycle = new ArrayList<>();
 		
 		for(int i = 0; i < hauteur; i++) {
 			for(int j = 0; j < largeur; j++) {

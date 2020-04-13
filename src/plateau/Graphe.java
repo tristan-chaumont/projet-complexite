@@ -3,14 +3,7 @@ package plateau;
 import main.Cellule;
 import static main.Global.*;
 
-import main.ConnectException;
 import main.Plateau;
-import tableau.Tableau;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
