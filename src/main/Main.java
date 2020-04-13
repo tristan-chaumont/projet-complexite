@@ -156,9 +156,9 @@ public class Main {
 
         if (sumR >= sumB)
             System.out.println(String.format("L'algo de backtracking est en moyenne %sx plus rapide que l'algo recursif pour %d execution(s).",
-                    new DecimalFormat("#.0").format((double) sumR / sumB), Integer.parseInt(n)));
+                    new DecimalFormat("#.00").format((double) sumR / sumB), Integer.parseInt(n)));
         else
             System.out.println(String.format("L'algo recursif est en moyenne %sx plus rapide que l'algo de backtracking pour %d execution(s).",
-                    new DecimalFormat("#.0").format((double) sumB / sumR), Integer.parseInt(n)));
+                    new DecimalFormat("#.00").format((double) sumB / sumR), Integer.parseInt(n)));
     }
 }
