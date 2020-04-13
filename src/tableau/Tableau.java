@@ -147,14 +147,21 @@ public class Tableau extends Plateau {
 				ArrayList<Integer> ind = getIndexes(possibilites.get(k));
 				ArrayList<Case> possibilitesC1 = getNumConnexions(start, cases[i][j], ind.get(0), ind.get(1));
 				
-				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || (possibilites.get(k).getType() == Type.CROIX && possibilitesC1.size() == 4 && getOccCase(possibilites.get(k)) <= 4)) {
-					listeCases.add(possibilites.get(k));
-					possibilites.get(k).setCaseCompte();
-					estPasse = true;
-					ArrayList<Integer> indexes = getIndexes(possibilites.get(k));
-
-					if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), false)) {
-						return true;
+				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || possibilites.get(k).getType() == Type.CROIX) {
+					if((possibilites.get(k).getType() == Type.CROIX && possibilitesC1.size() == 4 && getOccCase(possibilites.get(k)) <= 4) || possibilites.get(k).getType() != Type.CROIX) {
+						int numMarque = getNumMarque(possibilites);
+						
+						//Si il n'y a pas d'autres choix de passages que cette case
+						if(!possibilites.get(k).estCompte() || numMarque == possibilites.size()) {
+							listeCases.add(possibilites.get(k));
+							possibilites.get(k).setCaseCompte();
+							estPasse = true;
+							ArrayList<Integer> indexes = getIndexes(possibilites.get(k));
+	
+							if(backtrack(cases[i][j], indexes.get(0), indexes.get(1), false)) {
+								return true;
+							}
+						}
 					}
 				}
 			}
@@ -255,7 +262,6 @@ public class Tableau extends Plateau {
     			res.add(cases[i-1][j]);
     		}
     	}
-    	
     	return res;
     }
 	
@@ -335,6 +341,24 @@ public class Tableau extends Plateau {
 	 */
 	public static int getOccCase(Case c) {
 		return Collections.frequency(listeCases, c);
+	}
+	
+	/**
+	 * Méthode getNumMarque
+	 * Permet de connaître le nombre de cases marquées dans une liste
+	 * @param liste
+	 * 				liste
+	 * @return
+	 * 			nombre de cases marquées
+	 */
+	
+	public static int getNumMarque(ArrayList<Case> liste) {
+		int res = 0;
+		for (Case c: liste) {
+            if (c.estCompte())
+            	res++;
+        }
+		return res;
 	}
 	
 	/**
