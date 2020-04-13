@@ -7,10 +7,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.sun.deploy.security.SelectableSecurityManager;
 import plateau.Graphe;
 import tableau.Tableau;
-import main.Global.*;
 
 import static main.Global.*;
 
