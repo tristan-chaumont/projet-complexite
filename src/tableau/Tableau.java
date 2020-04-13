@@ -148,7 +148,7 @@ public class Tableau extends Plateau {
 				ArrayList<Case> possibilitesC1 = getNumConnexions(start, cases[i][j], ind.get(0), ind.get(1));
 				
 				if((!possibilites.get(k).estCompte()) || (possibilites.get(k) == start) || possibilites.get(k).getType() == Type.CROIX) {
-					if((possibilites.get(k).getType() == Type.CROIX && possibilitesC1.size() == 4 && getOccCase(possibilites.get(k)) <= 4) || possibilites.get(k).getType() != Type.CROIX) {
+					if(possibilites.get(k).getType() != Type.CROIX || (possibilitesC1.size() == 4 && getOccCase(possibilites.get(k)) <= 4)) {
 						int numMarque = getNumMarque(possibilites);
 						
 						//Si il n'y a pas d'autres choix de passages que cette case

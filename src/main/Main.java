@@ -84,10 +84,10 @@ public class Main {
     }
 
     public static void lancerAlgoNFois(int algo, String choixPlateau) {
-        System.out.println("Combien de fois voulez-vous lancer ce circuit (<= 1000) ? : ");
+        System.out.println("Combien de fois voulez-vous lancer ce circuit (<= 10,000) ? : ");
         String n = sc.next();
         while (!Pattern.matches("\\d+", n) || (Integer.parseInt(n) < 0 || Integer.parseInt(n) > 10000)) {
-            System.out.print("Veuillez choisir un nombre entre 1 et 10.000 : ");
+            System.out.print("Veuillez choisir un nombre entre 1 et 10,000 : ");
             n = sc.next();
         }
         System.out.println();
